@@ -1,0 +1,83 @@
+[INPUT]
+o_state@0.0.8
+o_state@1
+o_state@2
+o_state@3
+park@0.0.1
+
+
+[OUTPUT]
+a_state@0.0.8
+a_state@1
+a_state@2
+a_state@3
+
+
+[ENV_TRANS]
+$ 1 ! & ! o_state@3 & ! o_state@2 & ! o_state@1 & ! o_state@0.0.8 1
+$ 1 ! & ! o_state@3' & ! o_state@2' & ! o_state@1' & ! o_state@0.0.8' 1
+$ 1 ! & ! o_state@3 & ! o_state@2 & ! ^ o_state@1 1 & ! ^ o_state@0.0.8 0 1
+$ 1 ! & ! o_state@3' & ! o_state@2' & ! ^ o_state@1' 1 & ! ^ o_state@0.0.8' 0 1
+$ 1 ! & ! o_state@3 & ! o_state@2 & ! ^ o_state@1 1 & ! ^ o_state@0.0.8 1 1
+$ 1 ! & ! o_state@3' & ! o_state@2' & ! ^ o_state@1' 1 & ! ^ o_state@0.0.8' 1 1
+$ 1 ! & ! o_state@3 & ! ^ o_state@2 1 & ! ^ o_state@1 0 & ! ^ o_state@0.0.8 1 1
+$ 1 ! & ! o_state@3' & ! ^ o_state@2' 1 & ! ^ o_state@1' 0 & ! ^ o_state@0.0.8' 1 1
+$ 1 ! & ! o_state@3 & ! ^ o_state@2 1 & ! ^ o_state@1 1 & ! ^ o_state@0.0.8 0 1
+$ 1 ! & ! o_state@3' & ! ^ o_state@2' 1 & ! ^ o_state@1' 1 & ! ^ o_state@0.0.8' 0 1
+$ 1 ! & ! ^ o_state@3 1 & ! ^ o_state@2 0 & ! ^ o_state@1 0 & ! ^ o_state@0.0.8 0 1
+$ 1 ! & ! ^ o_state@3' 1 & ! ^ o_state@2' 0 & ! ^ o_state@1' 0 & ! ^ o_state@0.0.8' 0 1
+| ! $ 1 & ! o_state@3 & ! o_state@2 & ! o_state@1 & ! ^ o_state@0.0.8 1 1 | $ 1 & ! o_state@3' & ! o_state@2' & ! o_state@1' & ! ^ o_state@0.0.8' 1 1 $ 1 & ! o_state@3' & ! ^ o_state@2' 1 & ! ^ o_state@1' 0 & ! ^ o_state@0.0.8' 0 1
+| ! $ 1 & ! o_state@3 & ! ^ o_state@2 1 & ! ^ o_state@1 0 & ! ^ o_state@0.0.8 0 1 | | $ 1 & ! o_state@3' & ! ^ o_state@2' 1 & ! ^ o_state@1' 0 & ! ^ o_state@0.0.8' 0 1 $ 1 & ! o_state@3' & ! o_state@2' & ! o_state@1' & ! ^ o_state@0.0.8' 1 1 $ 1 & ! o_state@3' & ! ^ o_state@2' 1 & ! ^ o_state@1' 1 & ! ^ o_state@0.0.8' 1 1
+| ! $ 1 & ! o_state@3 & ! ^ o_state@2 1 & ! ^ o_state@1 1 & ! ^ o_state@0.0.8 1 1 | $ 1 & ! o_state@3' & ! ^ o_state@2' 1 & ! ^ o_state@1' 1 & ! ^ o_state@0.0.8' 1 1 $ 1 & ! o_state@3' & ! ^ o_state@2' 1 & ! ^ o_state@1' 0 & ! ^ o_state@0.0.8' 0 1
+
+
+| ! $ 1 & ! park@0.0.1 1 | $ 1 & ! park@0.0.1' 1 $ 1 & ! ^ park@0.0.1' 1 1
+| ! & $ 1 & ! ^ park@0.0.1 1 1 $ 1 ! & ! a_state@3 & ! a_state@2 & ! a_state@1 & ! a_state@0.0.8 1 $ 1 & ! ^ park@0.0.1' 1 1
+| ! & $ 1 & ! ^ park@0.0.1 1 1 $ 1 & ! a_state@3 & ! a_state@2 & ! a_state@1 & ! a_state@0.0.8 1 $ 1 & ! park@0.0.1' 1
+
+
+
+## Variable limits: 0<=o_state'<=8
+| ! o_state@3' & ! o_state@2' & ! o_state@1' | ! o_state@0.0.8' 0
+
+[ENV_INIT]
+| | $ 1 & ! o_state@3 & ! o_state@2 & ! o_state@1 & ! ^ o_state@0.0.8 1 1 $ 1 & ! o_state@3 & ! ^ o_state@2 1 & ! ^ o_state@1 0 & ! ^ o_state@0.0.8 0 1 $ 1 & ! o_state@3 & ! ^ o_state@2 1 & ! ^ o_state@1 1 & ! ^ o_state@0.0.8 1 1
+#park = 1
+
+## Variable limits: 0<=o_state<=8
+| ! o_state@3 & ! o_state@2 & ! o_state@1 | ! o_state@0.0.8 0
+
+[SYS_TRANS]
+| ! $ 1 & ! a_state@3 & ! a_state@2 & ! a_state@1 & ! a_state@0.0.8 1 | | $ 1 & ! a_state@3' & ! a_state@2' & ! a_state@1' & ! a_state@0.0.8' 1 $ 1 & ! a_state@3' & ! a_state@2' & ! a_state@1' & ! ^ a_state@0.0.8' 1 1 $ 1 & ! a_state@3' & ! a_state@2' & ! ^ a_state@1' 1 & ! ^ a_state@0.0.8' 1 1
+| ! $ 1 & ! a_state@3 & ! a_state@2 & ! ^ a_state@1 1 & ! ^ a_state@0.0.8 1 1 | | | $ 1 & ! a_state@3' & ! a_state@2' & ! ^ a_state@1' 1 & ! ^ a_state@0.0.8' 1 1 $ 1 & ! a_state@3' & ! a_state@2' & ! a_state@1' & ! a_state@0.0.8' 1 $ 1 & ! a_state@3' & ! ^ a_state@2' 1 & ! ^ a_state@1' 0 & ! ^ a_state@0.0.8' 0 1 $ 1 & ! a_state@3' & ! ^ a_state@2' 1 & ! ^ a_state@1' 1 & ! ^ a_state@0.0.8' 0 1
+| ! $ 1 & ! a_state@3 & ! ^ a_state@2 1 & ! ^ a_state@1 1 & ! ^ a_state@0.0.8 0 1 | | $ 1 & ! a_state@3' & ! ^ a_state@2' 1 & ! ^ a_state@1' 1 & ! ^ a_state@0.0.8' 0 1 $ 1 & ! a_state@3' & ! a_state@2' & ! ^ a_state@1' 1 & ! ^ a_state@0.0.8' 1 1 $ 1 & ! a_state@3' & ! ^ a_state@2' 1 & ! ^ a_state@1' 1 & ! ^ a_state@0.0.8' 1 1
+| ! $ 1 & ! a_state@3 & ! a_state@2 & ! a_state@1 & ! ^ a_state@0.0.8 1 1 | | | $ 1 & ! a_state@3' & ! a_state@2' & ! a_state@1' & ! ^ a_state@0.0.8' 1 1 $ 1 & ! a_state@3' & ! a_state@2' & ! a_state@1' & ! a_state@0.0.8' 1 $ 1 & ! a_state@3' & ! ^ a_state@2' 1 & ! ^ a_state@1' 0 & ! ^ a_state@0.0.8' 0 1 $ 1 & ! a_state@3' & ! a_state@2' & ! ^ a_state@1' 1 & ! ^ a_state@0.0.8' 0 1
+| ! $ 1 & ! a_state@3 & ! ^ a_state@2 1 & ! ^ a_state@1 0 & ! ^ a_state@0.0.8 0 1 | | | | $ 1 & ! a_state@3' & ! ^ a_state@2' 1 & ! ^ a_state@1' 0 & ! ^ a_state@0.0.8' 0 1 $ 1 & ! a_state@3' & ! a_state@2' & ! a_state@1' & ! ^ a_state@0.0.8' 1 1 $ 1 & ! a_state@3' & ! a_state@2' & ! ^ a_state@1' 1 & ! ^ a_state@0.0.8' 1 1 $ 1 & ! a_state@3' & ! ^ a_state@2' 1 & ! ^ a_state@1' 0 & ! ^ a_state@0.0.8' 1 1 $ 1 & ! a_state@3' & ! ^ a_state@2' 1 & ! ^ a_state@1' 1 & ! ^ a_state@0.0.8' 1 1
+| ! $ 1 & ! a_state@3 & ! ^ a_state@2 1 & ! ^ a_state@1 1 & ! ^ a_state@0.0.8 1 1 | | | $ 1 & ! a_state@3' & ! ^ a_state@2' 1 & ! ^ a_state@1' 1 & ! ^ a_state@0.0.8' 1 1 $ 1 & ! a_state@3' & ! ^ a_state@2' 1 & ! ^ a_state@1' 1 & ! ^ a_state@0.0.8' 0 1 $ 1 & ! ^ a_state@3' 1 & ! ^ a_state@2' 0 & ! ^ a_state@1' 0 & ! ^ a_state@0.0.8' 0 1 $ 1 & ! a_state@3' & ! ^ a_state@2' 1 & ! ^ a_state@1' 0 & ! ^ a_state@0.0.8' 0 1
+| ! $ 1 & ! a_state@3 & ! a_state@2 & ! ^ a_state@1 1 & ! ^ a_state@0.0.8 0 1 | | $ 1 & ! a_state@3' & ! a_state@2' & ! ^ a_state@1' 1 & ! ^ a_state@0.0.8' 0 1 $ 1 & ! a_state@3' & ! a_state@2' & ! a_state@1' & ! ^ a_state@0.0.8' 1 1 $ 1 & ! a_state@3' & ! ^ a_state@2' 1 & ! ^ a_state@1' 0 & ! ^ a_state@0.0.8' 1 1
+| ! $ 1 & ! a_state@3 & ! ^ a_state@2 1 & ! ^ a_state@1 0 & ! ^ a_state@0.0.8 1 1 | | | $ 1 & ! a_state@3' & ! ^ a_state@2' 1 & ! ^ a_state@1' 0 & ! ^ a_state@0.0.8' 1 1 $ 1 & ! a_state@3' & ! a_state@2' & ! ^ a_state@1' 1 & ! ^ a_state@0.0.8' 0 1 $ 1 & ! a_state@3' & ! ^ a_state@2' 1 & ! ^ a_state@1' 0 & ! ^ a_state@0.0.8' 0 1 $ 1 & ! ^ a_state@3' 1 & ! ^ a_state@2' 0 & ! ^ a_state@1' 0 & ! ^ a_state@0.0.8' 0 1
+| ! $ 1 & ! ^ a_state@3 1 & ! ^ a_state@2 0 & ! ^ a_state@1 0 & ! ^ a_state@0.0.8 0 1 | | $ 1 & ! ^ a_state@3' 1 & ! ^ a_state@2' 0 & ! ^ a_state@1' 0 & ! ^ a_state@0.0.8' 0 1 $ 1 & ! a_state@3' & ! ^ a_state@2' 1 & ! ^ a_state@1' 0 & ! ^ a_state@0.0.8' 1 1 $ 1 & ! a_state@3' & ! ^ a_state@2' 1 & ! ^ a_state@1' 1 & ! ^ a_state@0.0.8' 1 1
+
+$ 1 ! & ! ^ o_state@3 a_state@3 & ! ^ o_state@2 a_state@2 & ! ^ o_state@1 a_state@1 & ! ^ o_state@0.0.8 a_state@0.0.8 1
+$ 1 ! & ! ^ o_state@3' a_state@3 & ! ^ o_state@2' a_state@2 & ! ^ o_state@1' a_state@1 & ! ^ o_state@0.0.8' a_state@0.0.8 1
+$ 1 ! & ! ^ o_state@3 a_state@3' & ! ^ o_state@2 a_state@2' & ! ^ o_state@1 a_state@1' & ! ^ o_state@0.0.8 a_state@0.0.8' 1
+
+## Variable limits: 0<=a_state'<=8
+| ! a_state@3' & ! a_state@2' & ! a_state@1' | ! a_state@0.0.8' 0
+
+[SYS_INIT]
+## Variable limits: 0<=a_state<=8
+| ! a_state@3 & ! a_state@2 & ! a_state@1 | ! a_state@0.0.8 0
+
+[ENV_LIVENESS]
+# either o_state = 7 or o_state = 1
+#o_state = 7
+$ 1 & ! o_state@3 & ! o_state@2 & ! o_state@1 & ! ^ o_state@0.0.8 1 1
+$ 1 & ! ^ park@0.0.1 1 1
+
+
+
+[SYS_LIVENESS]
+$ 1 & ! ^ a_state@3 1 & ! ^ a_state@2 0 & ! ^ a_state@1 0 & ! ^ a_state@0.0.8 0 1
+& $ 1 & ! ^ park@0.0.1 1 1 $ 1 & ! a_state@3 & ! a_state@2 & ! a_state@1 & ! a_state@0.0.8 1
+

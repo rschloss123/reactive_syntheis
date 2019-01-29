@@ -1,0 +1,9 @@
+ python slugs/tools/StructuredSlugsParser/compiler.py slugs_code.structuredslugs > slugs_code.slugsin
+
+slugs slugs_code.slugsin --explicitStrategy --jsonOutput > ctrl.json 
+
+slugs slugs_code.slugsin --explicitStrategy --jsonOutput > $slugs_hw5/ctrl.json 
+
+alias slugs_compiler="python /home/formal/cyberphysical_systems/slugs/tools/StructuredSlugsParser/compiler.py"
+slugs_hw5="/home/formal/cyberphysical_systems/hw5"  
+

@@ -1,0 +1,12 @@
+PRISM
+
+prism table_carry.prism table_carry.props
+
+ xprism table_carry.prism table_carry.props
+
+
+SLUGS
+
+slugs_compiler dreamer.structuredslugs > dreamer.slugsin
+
+slugs dreamer.slugsin --explicitStrategy --jsonOutput > $slugs_hw5/two_player/ctrl.json

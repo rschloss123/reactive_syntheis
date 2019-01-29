@@ -1,0 +1,108 @@
+[INPUT]
+# 8 is off the grid
+start3:0...8 
+start4:0...8
+start7:0...8
+# intersection clear of obstacles
+clear_o:0...1
+# car initially in 3, 4, or 7
+init_wait3:0...1
+init_wait4:0...1
+init_wait7:0...1
+
+[OUTPUT]
+c_state:0...8
+clear_c:0...1
+
+[ENV_INIT]
+(start3 = 3 && start4 = 8 && start7 = 8 && init_wait3 = 1 && init_wait4 = 0 && init_wait7 = 0) || (start3 = 8 && start4 = 4 && start7 = 8 && init_wait3 = 0 && init_wait4 = 1 && init_wait7 = 0) || (start3 = 8 && start4 = 8 && start7 = 7 && init_wait3 = 0 && init_wait4 = 0 && init_wait7 = 1) || (start3 = 8 && start4 = 8 && start7 = 8 && init_wait3 = 0 && init_wait4 = 0 && init_wait7 = 0)   
+
+clear_o = 1 
+
+
+[SYS_INIT]
+c_state = 0 
+clear_c = 1
+
+
+[ENV_TRANS]
+
+
+# Movement of vehicles through intersection
+# Only one vehicle can move through intersection at a time
+(start3 = 8) -> (start3'= 8) || (start3' = 3)
+(start3 = 3) && (clear_c = 1) && (clear_o = 1) -> (start3'=3) || (start3'= 2)
+(start3 = 2) -> (start3'=1) || (start3'= 5)
+(start3 = 1) -> (start3'=8) 
+(start3 = 5) -> (start3'=6) 
+(start3 = 6) -> (start3'=8)
+(start3 = 3) && (clear_c = 0 || clear_o = 0) -> (start3' = 3)
+
+(start4 = 8) -> (start4'= 8) || (start4' = 4)
+(start4 = 4) && (clear_c = 1) && (clear_o = 1) -> (start4'=4) || (start4'= 5)
+(start4 = 5) -> (start4'=2) || (start4'= 6)
+(start4 = 6) -> (start4'=8) 
+(start4 = 2) -> (start4'=1) 
+(start4 = 1) -> (start4'=8)
+(start4 = 4) && (clear_c = 0 || clear_o = 0) -> (start4' = 4)
+
+(start7 = 8) -> (start7'= 8) || (start7' = 7)
+(start7 = 7) && (clear_c = 1) && (clear_o = 1) -> (start7'=7) || (start7'= 5)
+(start7 = 5) -> (start7'=6) || (start7'= 2)
+(start7 = 6) -> (start7'=8) 
+(start7 = 2) -> (start7'=1) 
+(start7 = 1) -> (start7'=8)
+(start7 = 7) && (clear_c = 0 || clear_o = 0) -> (start7' = 7)
+
+
+# Clear_o indicates when the intersection is free of environment obstacles 
+(start3' != 8 && start3' != 3) || (start4' != 8 && start4' != 4) || (start7' != 8 && start7' != 7) -> clear_o' = 0  
+(start3' = 8 || start3' = 3) && (start4' = 8 || start4' = 4) && (start7' = 8 || start7' = 7) -> clear_o' = 1
+
+# Enforcing that only one environment obstacle can move through the intersection at a time
+(start3' != 8 && start3' != 3) -> (start4' = 8 || start4' = 4) && (start7' = 8 || start7' = 7) 
+(start4' != 8 && start4' != 4) -> (start3' = 8 || start3' = 3) && (start7' = 8 || start7' = 7) 
+(start7' != 8 && start7' != 7) -> (start3' = 8 || start3' = 3) && (start4' = 8 || start4' = 4)
+
+# Checking whether a car initially present at 3, 4, or 7 has disappeared
+(init_wait3 = 1) && (start3' = 8) -> (init_wait3' = 0)
+(init_wait3 = 1) && (start3' != 8) -> (init_wait3' = 1)
+(init_wait3 = 0) -> (init_wait3' = 0)
+(init_wait4 = 1) && (start4' = 8) -> (init_wait4' = 0)
+(init_wait4 = 1) && (start4' != 8) -> (init_wait4' = 1)
+(init_wait4 = 0) -> (init_wait4' = 0)
+(init_wait7 = 1) && (start7' = 8) -> (init_wait7' = 0)
+(init_wait7 = 1) && (start7' != 8) -> (init_wait7' = 1)
+(init_wait7 = 0) -> (init_wait7' = 0)
+
+
+[ENV_LIVENESS]
+# always eventually the obstactles will not be in the intersection
+clear_o = 1 && clear_o' = 1
+# always eventually a car that was initially present at 3, 4, or 7 will disappear from the intersection
+init_wait3 = 0 && init_wait4 = 0 && init_wait7 = 0
+
+[SYS_TRANS]
+
+# Controlled car motion
+# Arrival to intersection
+c_state = 8 -> c_state' = 8 || c_state' = 0
+
+# Checking if environment car initially at 3, 4, or 7 has disappeared
+(c_state = 0 && clear_o' = 1 && init_wait3 = 0 && init_wait4 = 0 && init_wait7 = 0) -> (c_state' = 0) || (c_state' = 2)
+(c_state = 0 && clear_o' = 1 && (init_wait3 = 1 || init_wait4 = 1 || init_wait7 = 1)) -> (c_state' = 0) 
+
+
+(c_state = 2) -> (c_state'=1) || (c_state'= 5)
+(c_state = 1) -> (c_state'=8) 
+(c_state = 5) -> (c_state' = 6) 
+(c_state = 6) -> (c_state' = 8)
+(c_state = 0 && clear_o' = 0) -> (c_state' = 0)
+
+(c_state != 8 && c_state != 0) -> clear_c = 0
+(c_state = 8 || c_state = 0) -> clear_c = 1
+
+
+[SYS_LIVENESS]
+# The car is eventually at 7
+c_state = 6

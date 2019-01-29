@@ -1,0 +1,131 @@
+[INPUT]
+# Requests for floors 
+REQ0 : 0...1
+REQ1 : 0...1
+REQ2 : 0...1
+REQ3 : 0...1
+# Number of requests is at most 2
+NUM_REQ : 0...2
+# Attempt to control frequency of requests to top floor, but causes deadlocks in the controller
+#COUNT_NOT_REQ3 : 0...5
+
+[OUTPUT]
+OPEN0 : 0...1
+OPEN1 : 0...1
+OPEN2 : 0...1
+OPEN3 : 0...1 
+FLOOR : 0...3
+
+[ENV_INIT]
+REQ0 = 0
+REQ1 = 0
+REQ2 = 0
+REQ3 = 0
+#COUNT_NOT_REQ3 = 0
+
+[SYS_INIT]
+OPEN0 = 0
+OPEN1 = 0
+OPEN2 = 0
+OPEN3 = 0
+FLOOR = 0 || FLOOR = 1 || FLOOR = 2 || FLOOR = 3
+
+[ENV_TRANS]
+# Number of requests is at most 2
+NUM_REQ' = REQ0' + REQ1' + REQ2' + REQ3'
+NUM_REQ' <= 2
+
+
+# When the environment can make new requests
+(REQ0 = 1) && (OPEN0 != 1) -> REQ0' = 1 
+(REQ0 = 1) && (OPEN0 = 1) -> REQ0' = 1 || REQ0' = 0
+REQ0 = 0 -> REQ0' = 1 || REQ0' = 0
+
+(REQ1 = 1) && (OPEN1 != 1) -> REQ1' = 1 
+(REQ1 = 1) && (OPEN1 = 1) -> REQ1' = 1 || REQ1' = 0
+REQ1 = 0 -> REQ1' = 1 || REQ1' = 0
+
+(REQ2 = 1) && (OPEN2 != 1) -> REQ2' = 1 
+(REQ2 = 1) && (OPEN2 = 1) -> REQ2' = 1 || REQ2' = 0
+REQ2 = 0 -> REQ2' = 1 || REQ2' = 0
+
+# I put an assumption that a request to the top floor can only be made when the elevator is on the ground floor.
+# This is the only way that I could make the specifications realizable.
+
+(REQ3 = 1) && (OPEN3 != 1) -> REQ3' = 1 
+#(REQ3 = 1) && (OPEN3 = 1) -> REQ3' = 1 || REQ3' = 0
+(REQ3 = 1) && (FLOOR = 3) -> REQ3' = 0
+#REQ3 = 0 -> REQ3' = 1 || REQ3' = 0
+REQ3 = 0 && FLOOR = 0 -> REQ3' = 1 || REQ3' = 0
+REQ3 = 0 && FLOOR != 0 -> REQ3' = 0
+
+#REQ3' = 0 -> COUNT_NOT_REQ3' = COUNT_NOT_REQ3+1
+#REQ3' = 1 -> COUNT_NOT_REQ3' = 0
+#COUNT_NOT_REQ3 = 5 -> COUNT_NOT_REQ3' = 0
+
+[ENV_LIVENESS]
+# These assumptions cause deadlocks in the controller 
+# Uncomment these to stay put if there are no requests
+# REQ0 = 1
+# REQ1 = 1
+# REQ2 = 1
+# REQ3 = 1
+
+
+[SYS_TRANS]
+
+# Stay put if there are no requests - causes deadlock
+# REQ0' = 0 && REQ1' = 0 && REQ2' = 0 && REQ3' = 0 -> FLOOR' = FLOOR 
+
+# Ensure safety, that door is only open when present on the requested floor
+# When to open depends on if the top floor is requested or not
+# This part of the code ensures that all requests will be made some time
+
+REQ0' = 1 && FLOOR' = 0 && REQ3' = 0 -> OPEN0' = 1 
+REQ0' = 1 && FLOOR' = 0 && REQ3' != 0 -> OPEN0' = 0
+REQ0' = 0 && FLOOR' != 0 -> OPEN0' = 0 
+
+REQ1' = 1 && FLOOR' = 1 && REQ3' = 0  -> OPEN1' = 1 
+REQ1' = 1 && FLOOR' = 1 && REQ3' != 0  -> OPEN1' = 0 
+REQ1' = 0 && FLOOR' != 1 -> OPEN1' = 0 
+
+
+REQ2' = 1 && FLOOR' = 2 && REQ3' = 0  -> OPEN2' = 1 
+REQ2' = 1 && FLOOR' = 2 && REQ3' != 0  -> OPEN2' = 0
+REQ2' = 0 && FLOOR' != 2 -> OPEN2' = 0 
+
+
+REQ3' = 1 && FLOOR' = 3 -> OPEN3' = 1 
+REQ3' = 0 && FLOOR' != 3 -> OPEN3' = 0 
+
+
+# Floor paths
+# If the top floor is requested, the elevator serves it immediately without stopping
+
+#(FLOOR = 0) -> (FLOOR' = 0 || FLOOR'=1)
+#(FLOOR = 1) -> (FLOOR' = 0 || FLOOR'=1 || FLOOR'=2)
+#(FLOOR = 2) -> (FLOOR' = 1 || FLOOR'=2 || FLOOR'=3)
+#(FLOOR = 3) -> (FLOOR' = 2 || FLOOR'=3)
+
+
+(FLOOR = 0 && REQ3 = 0) -> (FLOOR' = 0 || FLOOR'=1)
+(FLOOR = 1 && REQ3 = 0) -> (FLOOR' = 0 || FLOOR'=1 || FLOOR'=2)
+(FLOOR = 2 && REQ3 = 0) -> (FLOOR' = 1 || FLOOR'=2 || FLOOR'=3)
+
+(FLOOR = 3) -> (FLOOR' = 2 || FLOOR'=3)
+
+(FLOOR = 0 && REQ3 = 1) -> (FLOOR'=1)
+(FLOOR = 1 && REQ3 = 1) -> (FLOOR'=2)
+(FLOOR = 2 && REQ3 = 1) -> (FLOOR'=3)
+
+
+[SYS_LIVENESS]
+# I put an assumption that a request to the top floor can only be made when the elevator is on the ground floor.
+# This is the only way that I could make the specifications realizable. Floors can be served on the way down from 
+# the top floor to the bottom floor based on the sys_liveness specification that the elevator will always eventually
+# be present on each floor, so all requests will be served at some time. 
+FLOOR = 0
+FLOOR = 1
+FLOOR = 2
+FLOOR = 3
+

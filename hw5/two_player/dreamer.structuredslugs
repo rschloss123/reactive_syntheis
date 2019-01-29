@@ -1,0 +1,63 @@
+[INPUT]
+# human
+h_state:0...3
+# park signal
+h_closed:0...1 
+ 
+[OUTPUT]
+# robot
+r_state:0...3
+r_closed:0...1
+
+[ENV_INIT]
+h_state = 0
+h_closed = 0 
+
+
+[SYS_INIT]
+r_state = 2
+r_closed = 0
+
+[ENV_TRANS]
+h_state = 0 && h_closed = 0 -> (h_state' = 0) && ((h_closed' = 0) || (h_closed' = 1) ) 
+h_state = 0 && h_closed = 1 -> ((h_state' = 0) || (h_state' = 1)) && (h_closed' = 1)  
+
+h_state = 1 && h_closed = 1 && r_state = 1 -> (h_state' = 1 && h_closed'  = 0)  
+h_state = 1 && h_closed = 0 && r_state = 1 -> (h_state' = 0 && h_closed'  = 0)  
+h_state = 1 && h_closed = 1 && r_state != 1 ->  (h_state' = 1 && h_closed'  = 1)  
+
+h_state != 2
+h_state' != 2
+h_state != 3
+h_state' != 3
+
+
+
+[ENV_LIVENESS]
+# always eventually the human will hand over a plate
+  #&& (r_state = 1)
+(h_state = 1) && (h_closed = 1)
+#(h_state = 0) && (h_closed = 1)
+
+[SYS_TRANS]
+(h_state = 1) && (r_closed = 0) && (r_state = 3) -> (r_state' = 2) && (r_closed' = 0)
+(h_state = 1) &&( r_closed = 0) && (r_state = 2) -> (r_state' = 1) && (r_closed' = 0)
+(h_state = 1) &&( r_closed = 0) && (r_state = 1) -> (r_state' = 1) && (r_closed' = 1) 
+
+(h_state != 1) && (r_closed = 1) && (r_state = 1) ->  (r_state' = 2) && (r_closed' = 1)  
+(h_state != 1) && (r_closed = 1) && (r_state = 2) ->  (r_state' = 3) && (r_closed' = 1)  
+(h_state != 1) && (r_closed = 1) && (r_state = 3) ->  (r_state' = 3) && (r_closed' = 0)  
+
+(h_state != 1) && (r_closed = 0) && (r_state = 3) -> (r_state' = 2) && (r_closed' = 0)  
+(h_state != 1) && (r_closed = 0) && (r_state = 2) -> (r_state' = 2) && (r_closed' = 0)  
+(h_state != 1) && (r_closed = 0) && (r_state = 1) -> (r_state' = 2) && (r_closed' = 0) 
+
+
+r_state != 0
+r_state' != 0
+
+
+[SYS_LIVENESS]
+# eventually the robot delivers the item in space 4
+(r_closed = 1) && (r_state = 3)
+

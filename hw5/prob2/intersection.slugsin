@@ -1,0 +1,144 @@
+[INPUT]
+# 8 is off the grid
+start3@0.0.8
+start3@1
+start3@2
+start3@3
+start4@0.0.8
+start4@1
+start4@2
+start4@3
+start7@0.0.8
+start7@1
+start7@2
+start7@3
+# intersection clear of obstacles
+clear_o@0.0.1
+# car initially in 3, 4, or 7
+init_wait3@0.0.1
+init_wait4@0.0.1
+init_wait7@0.0.1
+
+
+[OUTPUT]
+c_state@0.0.8
+c_state@1
+c_state@2
+c_state@3
+clear_c@0.0.1
+
+
+[ENV_TRANS]
+
+
+# Movement of vehicles through intersection
+# Only one vehicle can move through intersection at a time
+| ! $ 1 & ! ^ start3@3 1 & ! ^ start3@2 0 & ! ^ start3@1 0 & ! ^ start3@0.0.8 0 1 | $ 1 & ! ^ start3@3' 1 & ! ^ start3@2' 0 & ! ^ start3@1' 0 & ! ^ start3@0.0.8' 0 1 $ 1 & ! start3@3' & ! start3@2' & ! ^ start3@1' 1 & ! ^ start3@0.0.8' 1 1
+| ! & & $ 1 & ! start3@3 & ! start3@2 & ! ^ start3@1 1 & ! ^ start3@0.0.8 1 1 $ 1 & ! ^ clear_c@0.0.1 1 1 $ 1 & ! ^ clear_o@0.0.1 1 1 | $ 1 & ! start3@3' & ! start3@2' & ! ^ start3@1' 1 & ! ^ start3@0.0.8' 1 1 $ 1 & ! start3@3' & ! start3@2' & ! ^ start3@1' 1 & ! ^ start3@0.0.8' 0 1
+| ! $ 1 & ! start3@3 & ! start3@2 & ! ^ start3@1 1 & ! ^ start3@0.0.8 0 1 | $ 1 & ! start3@3' & ! start3@2' & ! start3@1' & ! ^ start3@0.0.8' 1 1 $ 1 & ! start3@3' & ! ^ start3@2' 1 & ! ^ start3@1' 0 & ! ^ start3@0.0.8' 1 1
+| ! $ 1 & ! start3@3 & ! start3@2 & ! start3@1 & ! ^ start3@0.0.8 1 1 $ 1 & ! ^ start3@3' 1 & ! ^ start3@2' 0 & ! ^ start3@1' 0 & ! ^ start3@0.0.8' 0 1
+| ! $ 1 & ! start3@3 & ! ^ start3@2 1 & ! ^ start3@1 0 & ! ^ start3@0.0.8 1 1 $ 1 & ! start3@3' & ! ^ start3@2' 1 & ! ^ start3@1' 1 & ! ^ start3@0.0.8' 0 1
+| ! $ 1 & ! start3@3 & ! ^ start3@2 1 & ! ^ start3@1 1 & ! ^ start3@0.0.8 0 1 $ 1 & ! ^ start3@3' 1 & ! ^ start3@2' 0 & ! ^ start3@1' 0 & ! ^ start3@0.0.8' 0 1
+| ! & $ 1 & ! start3@3 & ! start3@2 & ! ^ start3@1 1 & ! ^ start3@0.0.8 1 1 | $ 1 & ! clear_c@0.0.1 1 $ 1 & ! clear_o@0.0.1 1 $ 1 & ! start3@3' & ! start3@2' & ! ^ start3@1' 1 & ! ^ start3@0.0.8' 1 1
+
+| ! $ 1 & ! ^ start4@3 1 & ! ^ start4@2 0 & ! ^ start4@1 0 & ! ^ start4@0.0.8 0 1 | $ 1 & ! ^ start4@3' 1 & ! ^ start4@2' 0 & ! ^ start4@1' 0 & ! ^ start4@0.0.8' 0 1 $ 1 & ! start4@3' & ! ^ start4@2' 1 & ! ^ start4@1' 0 & ! ^ start4@0.0.8' 0 1
+| ! & & $ 1 & ! start4@3 & ! ^ start4@2 1 & ! ^ start4@1 0 & ! ^ start4@0.0.8 0 1 $ 1 & ! ^ clear_c@0.0.1 1 1 $ 1 & ! ^ clear_o@0.0.1 1 1 | $ 1 & ! start4@3' & ! ^ start4@2' 1 & ! ^ start4@1' 0 & ! ^ start4@0.0.8' 0 1 $ 1 & ! start4@3' & ! ^ start4@2' 1 & ! ^ start4@1' 0 & ! ^ start4@0.0.8' 1 1
+| ! $ 1 & ! start4@3 & ! ^ start4@2 1 & ! ^ start4@1 0 & ! ^ start4@0.0.8 1 1 | $ 1 & ! start4@3' & ! start4@2' & ! ^ start4@1' 1 & ! ^ start4@0.0.8' 0 1 $ 1 & ! start4@3' & ! ^ start4@2' 1 & ! ^ start4@1' 1 & ! ^ start4@0.0.8' 0 1
+| ! $ 1 & ! start4@3 & ! ^ start4@2 1 & ! ^ start4@1 1 & ! ^ start4@0.0.8 0 1 $ 1 & ! ^ start4@3' 1 & ! ^ start4@2' 0 & ! ^ start4@1' 0 & ! ^ start4@0.0.8' 0 1
+| ! $ 1 & ! start4@3 & ! start4@2 & ! ^ start4@1 1 & ! ^ start4@0.0.8 0 1 $ 1 & ! start4@3' & ! start4@2' & ! start4@1' & ! ^ start4@0.0.8' 1 1
+| ! $ 1 & ! start4@3 & ! start4@2 & ! start4@1 & ! ^ start4@0.0.8 1 1 $ 1 & ! ^ start4@3' 1 & ! ^ start4@2' 0 & ! ^ start4@1' 0 & ! ^ start4@0.0.8' 0 1
+| ! & $ 1 & ! start4@3 & ! ^ start4@2 1 & ! ^ start4@1 0 & ! ^ start4@0.0.8 0 1 | $ 1 & ! clear_c@0.0.1 1 $ 1 & ! clear_o@0.0.1 1 $ 1 & ! start4@3' & ! ^ start4@2' 1 & ! ^ start4@1' 0 & ! ^ start4@0.0.8' 0 1
+
+| ! $ 1 & ! ^ start7@3 1 & ! ^ start7@2 0 & ! ^ start7@1 0 & ! ^ start7@0.0.8 0 1 | $ 1 & ! ^ start7@3' 1 & ! ^ start7@2' 0 & ! ^ start7@1' 0 & ! ^ start7@0.0.8' 0 1 $ 1 & ! start7@3' & ! ^ start7@2' 1 & ! ^ start7@1' 1 & ! ^ start7@0.0.8' 1 1
+| ! & & $ 1 & ! start7@3 & ! ^ start7@2 1 & ! ^ start7@1 1 & ! ^ start7@0.0.8 1 1 $ 1 & ! ^ clear_c@0.0.1 1 1 $ 1 & ! ^ clear_o@0.0.1 1 1 | $ 1 & ! start7@3' & ! ^ start7@2' 1 & ! ^ start7@1' 1 & ! ^ start7@0.0.8' 1 1 $ 1 & ! start7@3' & ! ^ start7@2' 1 & ! ^ start7@1' 0 & ! ^ start7@0.0.8' 1 1
+| ! $ 1 & ! start7@3 & ! ^ start7@2 1 & ! ^ start7@1 0 & ! ^ start7@0.0.8 1 1 | $ 1 & ! start7@3' & ! ^ start7@2' 1 & ! ^ start7@1' 1 & ! ^ start7@0.0.8' 0 1 $ 1 & ! start7@3' & ! start7@2' & ! ^ start7@1' 1 & ! ^ start7@0.0.8' 0 1
+| ! $ 1 & ! start7@3 & ! ^ start7@2 1 & ! ^ start7@1 1 & ! ^ start7@0.0.8 0 1 $ 1 & ! ^ start7@3' 1 & ! ^ start7@2' 0 & ! ^ start7@1' 0 & ! ^ start7@0.0.8' 0 1
+| ! $ 1 & ! start7@3 & ! start7@2 & ! ^ start7@1 1 & ! ^ start7@0.0.8 0 1 $ 1 & ! start7@3' & ! start7@2' & ! start7@1' & ! ^ start7@0.0.8' 1 1
+| ! $ 1 & ! start7@3 & ! start7@2 & ! start7@1 & ! ^ start7@0.0.8 1 1 $ 1 & ! ^ start7@3' 1 & ! ^ start7@2' 0 & ! ^ start7@1' 0 & ! ^ start7@0.0.8' 0 1
+| ! & $ 1 & ! start7@3 & ! ^ start7@2 1 & ! ^ start7@1 1 & ! ^ start7@0.0.8 1 1 | $ 1 & ! clear_c@0.0.1 1 $ 1 & ! clear_o@0.0.1 1 $ 1 & ! start7@3' & ! ^ start7@2' 1 & ! ^ start7@1' 1 & ! ^ start7@0.0.8' 1 1
+
+
+# Clear_o indicates when the intersection is free of environment obstacles
+| ! | | & $ 1 ! & ! ^ start3@3' 1 & ! ^ start3@2' 0 & ! ^ start3@1' 0 & ! ^ start3@0.0.8' 0 1 $ 1 ! & ! start3@3' & ! start3@2' & ! ^ start3@1' 1 & ! ^ start3@0.0.8' 1 1 & $ 1 ! & ! ^ start4@3' 1 & ! ^ start4@2' 0 & ! ^ start4@1' 0 & ! ^ start4@0.0.8' 0 1 $ 1 ! & ! start4@3' & ! ^ start4@2' 1 & ! ^ start4@1' 0 & ! ^ start4@0.0.8' 0 1 & $ 1 ! & ! ^ start7@3' 1 & ! ^ start7@2' 0 & ! ^ start7@1' 0 & ! ^ start7@0.0.8' 0 1 $ 1 ! & ! start7@3' & ! ^ start7@2' 1 & ! ^ start7@1' 1 & ! ^ start7@0.0.8' 1 1 $ 1 & ! clear_o@0.0.1' 1
+| ! & & | $ 1 & ! ^ start3@3' 1 & ! ^ start3@2' 0 & ! ^ start3@1' 0 & ! ^ start3@0.0.8' 0 1 $ 1 & ! start3@3' & ! start3@2' & ! ^ start3@1' 1 & ! ^ start3@0.0.8' 1 1 | $ 1 & ! ^ start4@3' 1 & ! ^ start4@2' 0 & ! ^ start4@1' 0 & ! ^ start4@0.0.8' 0 1 $ 1 & ! start4@3' & ! ^ start4@2' 1 & ! ^ start4@1' 0 & ! ^ start4@0.0.8' 0 1 | $ 1 & ! ^ start7@3' 1 & ! ^ start7@2' 0 & ! ^ start7@1' 0 & ! ^ start7@0.0.8' 0 1 $ 1 & ! start7@3' & ! ^ start7@2' 1 & ! ^ start7@1' 1 & ! ^ start7@0.0.8' 1 1 $ 1 & ! ^ clear_o@0.0.1' 1 1
+
+# Enforcing that only one environment obstacle can move through the intersection at a time
+| ! & $ 1 ! & ! ^ start3@3' 1 & ! ^ start3@2' 0 & ! ^ start3@1' 0 & ! ^ start3@0.0.8' 0 1 $ 1 ! & ! start3@3' & ! start3@2' & ! ^ start3@1' 1 & ! ^ start3@0.0.8' 1 1 & | $ 1 & ! ^ start4@3' 1 & ! ^ start4@2' 0 & ! ^ start4@1' 0 & ! ^ start4@0.0.8' 0 1 $ 1 & ! start4@3' & ! ^ start4@2' 1 & ! ^ start4@1' 0 & ! ^ start4@0.0.8' 0 1 | $ 1 & ! ^ start7@3' 1 & ! ^ start7@2' 0 & ! ^ start7@1' 0 & ! ^ start7@0.0.8' 0 1 $ 1 & ! start7@3' & ! ^ start7@2' 1 & ! ^ start7@1' 1 & ! ^ start7@0.0.8' 1 1
+| ! & $ 1 ! & ! ^ start4@3' 1 & ! ^ start4@2' 0 & ! ^ start4@1' 0 & ! ^ start4@0.0.8' 0 1 $ 1 ! & ! start4@3' & ! ^ start4@2' 1 & ! ^ start4@1' 0 & ! ^ start4@0.0.8' 0 1 & | $ 1 & ! ^ start3@3' 1 & ! ^ start3@2' 0 & ! ^ start3@1' 0 & ! ^ start3@0.0.8' 0 1 $ 1 & ! start3@3' & ! start3@2' & ! ^ start3@1' 1 & ! ^ start3@0.0.8' 1 1 | $ 1 & ! ^ start7@3' 1 & ! ^ start7@2' 0 & ! ^ start7@1' 0 & ! ^ start7@0.0.8' 0 1 $ 1 & ! start7@3' & ! ^ start7@2' 1 & ! ^ start7@1' 1 & ! ^ start7@0.0.8' 1 1
+| ! & $ 1 ! & ! ^ start7@3' 1 & ! ^ start7@2' 0 & ! ^ start7@1' 0 & ! ^ start7@0.0.8' 0 1 $ 1 ! & ! start7@3' & ! ^ start7@2' 1 & ! ^ start7@1' 1 & ! ^ start7@0.0.8' 1 1 & | $ 1 & ! ^ start3@3' 1 & ! ^ start3@2' 0 & ! ^ start3@1' 0 & ! ^ start3@0.0.8' 0 1 $ 1 & ! start3@3' & ! start3@2' & ! ^ start3@1' 1 & ! ^ start3@0.0.8' 1 1 | $ 1 & ! ^ start4@3' 1 & ! ^ start4@2' 0 & ! ^ start4@1' 0 & ! ^ start4@0.0.8' 0 1 $ 1 & ! start4@3' & ! ^ start4@2' 1 & ! ^ start4@1' 0 & ! ^ start4@0.0.8' 0 1
+
+# Checking whether a car initially present at 3, 4, or 7 has disappeared
+| ! & $ 1 & ! ^ init_wait3@0.0.1 1 1 $ 1 & ! ^ start3@3' 1 & ! ^ start3@2' 0 & ! ^ start3@1' 0 & ! ^ start3@0.0.8' 0 1 $ 1 & ! init_wait3@0.0.1' 1
+| ! & $ 1 & ! ^ init_wait3@0.0.1 1 1 $ 1 ! & ! ^ start3@3' 1 & ! ^ start3@2' 0 & ! ^ start3@1' 0 & ! ^ start3@0.0.8' 0 1 $ 1 & ! ^ init_wait3@0.0.1' 1 1
+| ! $ 1 & ! init_wait3@0.0.1 1 $ 1 & ! init_wait3@0.0.1' 1
+| ! & $ 1 & ! ^ init_wait4@0.0.1 1 1 $ 1 & ! ^ start4@3' 1 & ! ^ start4@2' 0 & ! ^ start4@1' 0 & ! ^ start4@0.0.8' 0 1 $ 1 & ! init_wait4@0.0.1' 1
+| ! & $ 1 & ! ^ init_wait4@0.0.1 1 1 $ 1 ! & ! ^ start4@3' 1 & ! ^ start4@2' 0 & ! ^ start4@1' 0 & ! ^ start4@0.0.8' 0 1 $ 1 & ! ^ init_wait4@0.0.1' 1 1
+| ! $ 1 & ! init_wait4@0.0.1 1 $ 1 & ! init_wait4@0.0.1' 1
+| ! & $ 1 & ! ^ init_wait7@0.0.1 1 1 $ 1 & ! ^ start7@3' 1 & ! ^ start7@2' 0 & ! ^ start7@1' 0 & ! ^ start7@0.0.8' 0 1 $ 1 & ! init_wait7@0.0.1' 1
+| ! & $ 1 & ! ^ init_wait7@0.0.1 1 1 $ 1 ! & ! ^ start7@3' 1 & ! ^ start7@2' 0 & ! ^ start7@1' 0 & ! ^ start7@0.0.8' 0 1 $ 1 & ! ^ init_wait7@0.0.1' 1 1
+| ! $ 1 & ! init_wait7@0.0.1 1 $ 1 & ! init_wait7@0.0.1' 1
+
+
+## Variable limits: 0<=start3'<=8
+| ! start3@3' & ! start3@2' & ! start3@1' | ! start3@0.0.8' 0
+## Variable limits: 0<=start4'<=8
+| ! start4@3' & ! start4@2' & ! start4@1' | ! start4@0.0.8' 0
+## Variable limits: 0<=start7'<=8
+| ! start7@3' & ! start7@2' & ! start7@1' | ! start7@0.0.8' 0
+
+[ENV_INIT]
+| | | & & & & & $ 1 & ! start3@3 & ! start3@2 & ! ^ start3@1 1 & ! ^ start3@0.0.8 1 1 $ 1 & ! ^ start4@3 1 & ! ^ start4@2 0 & ! ^ start4@1 0 & ! ^ start4@0.0.8 0 1 $ 1 & ! ^ start7@3 1 & ! ^ start7@2 0 & ! ^ start7@1 0 & ! ^ start7@0.0.8 0 1 $ 1 & ! ^ init_wait3@0.0.1 1 1 $ 1 & ! init_wait4@0.0.1 1 $ 1 & ! init_wait7@0.0.1 1 & & & & & $ 1 & ! ^ start3@3 1 & ! ^ start3@2 0 & ! ^ start3@1 0 & ! ^ start3@0.0.8 0 1 $ 1 & ! start4@3 & ! ^ start4@2 1 & ! ^ start4@1 0 & ! ^ start4@0.0.8 0 1 $ 1 & ! ^ start7@3 1 & ! ^ start7@2 0 & ! ^ start7@1 0 & ! ^ start7@0.0.8 0 1 $ 1 & ! init_wait3@0.0.1 1 $ 1 & ! ^ init_wait4@0.0.1 1 1 $ 1 & ! init_wait7@0.0.1 1 & & & & & $ 1 & ! ^ start3@3 1 & ! ^ start3@2 0 & ! ^ start3@1 0 & ! ^ start3@0.0.8 0 1 $ 1 & ! ^ start4@3 1 & ! ^ start4@2 0 & ! ^ start4@1 0 & ! ^ start4@0.0.8 0 1 $ 1 & ! start7@3 & ! ^ start7@2 1 & ! ^ start7@1 1 & ! ^ start7@0.0.8 1 1 $ 1 & ! init_wait3@0.0.1 1 $ 1 & ! init_wait4@0.0.1 1 $ 1 & ! ^ init_wait7@0.0.1 1 1 & & & & & $ 1 & ! ^ start3@3 1 & ! ^ start3@2 0 & ! ^ start3@1 0 & ! ^ start3@0.0.8 0 1 $ 1 & ! ^ start4@3 1 & ! ^ start4@2 0 & ! ^ start4@1 0 & ! ^ start4@0.0.8 0 1 $ 1 & ! ^ start7@3 1 & ! ^ start7@2 0 & ! ^ start7@1 0 & ! ^ start7@0.0.8 0 1 $ 1 & ! init_wait3@0.0.1 1 $ 1 & ! init_wait4@0.0.1 1 $ 1 & ! init_wait7@0.0.1 1
+
+$ 1 & ! ^ clear_o@0.0.1 1 1
+
+
+## Variable limits: 0<=start3<=8
+| ! start3@3 & ! start3@2 & ! start3@1 | ! start3@0.0.8 0
+## Variable limits: 0<=start4<=8
+| ! start4@3 & ! start4@2 & ! start4@1 | ! start4@0.0.8 0
+## Variable limits: 0<=start7<=8
+| ! start7@3 & ! start7@2 & ! start7@1 | ! start7@0.0.8 0
+
+[SYS_TRANS]
+
+# Controlled car motion
+# Arrival to intersection
+| ! $ 1 & ! ^ c_state@3 1 & ! ^ c_state@2 0 & ! ^ c_state@1 0 & ! ^ c_state@0.0.8 0 1 | $ 1 & ! ^ c_state@3' 1 & ! ^ c_state@2' 0 & ! ^ c_state@1' 0 & ! ^ c_state@0.0.8' 0 1 $ 1 & ! c_state@3' & ! c_state@2' & ! c_state@1' & ! c_state@0.0.8' 1
+
+# Checking if environment car initially at 3, 4, or 7 has disappeared
+| ! & & & & $ 1 & ! c_state@3 & ! c_state@2 & ! c_state@1 & ! c_state@0.0.8 1 $ 1 & ! ^ clear_o@0.0.1' 1 1 $ 1 & ! init_wait3@0.0.1 1 $ 1 & ! init_wait4@0.0.1 1 $ 1 & ! init_wait7@0.0.1 1 | $ 1 & ! c_state@3' & ! c_state@2' & ! c_state@1' & ! c_state@0.0.8' 1 $ 1 & ! c_state@3' & ! c_state@2' & ! ^ c_state@1' 1 & ! ^ c_state@0.0.8' 0 1
+| ! & & $ 1 & ! c_state@3 & ! c_state@2 & ! c_state@1 & ! c_state@0.0.8 1 $ 1 & ! ^ clear_o@0.0.1' 1 1 | | $ 1 & ! ^ init_wait3@0.0.1 1 1 $ 1 & ! ^ init_wait4@0.0.1 1 1 $ 1 & ! ^ init_wait7@0.0.1 1 1 $ 1 & ! c_state@3' & ! c_state@2' & ! c_state@1' & ! c_state@0.0.8' 1
+
+
+| ! $ 1 & ! c_state@3 & ! c_state@2 & ! ^ c_state@1 1 & ! ^ c_state@0.0.8 0 1 | $ 1 & ! c_state@3' & ! c_state@2' & ! c_state@1' & ! ^ c_state@0.0.8' 1 1 $ 1 & ! c_state@3' & ! ^ c_state@2' 1 & ! ^ c_state@1' 0 & ! ^ c_state@0.0.8' 1 1
+| ! $ 1 & ! c_state@3 & ! c_state@2 & ! c_state@1 & ! ^ c_state@0.0.8 1 1 $ 1 & ! ^ c_state@3' 1 & ! ^ c_state@2' 0 & ! ^ c_state@1' 0 & ! ^ c_state@0.0.8' 0 1
+| ! $ 1 & ! c_state@3 & ! ^ c_state@2 1 & ! ^ c_state@1 0 & ! ^ c_state@0.0.8 1 1 $ 1 & ! c_state@3' & ! ^ c_state@2' 1 & ! ^ c_state@1' 1 & ! ^ c_state@0.0.8' 0 1
+| ! $ 1 & ! c_state@3 & ! ^ c_state@2 1 & ! ^ c_state@1 1 & ! ^ c_state@0.0.8 0 1 $ 1 & ! ^ c_state@3' 1 & ! ^ c_state@2' 0 & ! ^ c_state@1' 0 & ! ^ c_state@0.0.8' 0 1
+| ! & $ 1 & ! c_state@3 & ! c_state@2 & ! c_state@1 & ! c_state@0.0.8 1 $ 1 & ! clear_o@0.0.1' 1 $ 1 & ! c_state@3' & ! c_state@2' & ! c_state@1' & ! c_state@0.0.8' 1
+
+| ! & $ 1 ! & ! ^ c_state@3 1 & ! ^ c_state@2 0 & ! ^ c_state@1 0 & ! ^ c_state@0.0.8 0 1 $ 1 ! & ! c_state@3 & ! c_state@2 & ! c_state@1 & ! c_state@0.0.8 1 $ 1 & ! clear_c@0.0.1 1
+| ! | $ 1 & ! ^ c_state@3 1 & ! ^ c_state@2 0 & ! ^ c_state@1 0 & ! ^ c_state@0.0.8 0 1 $ 1 & ! c_state@3 & ! c_state@2 & ! c_state@1 & ! c_state@0.0.8 1 $ 1 & ! ^ clear_c@0.0.1 1 1
+
+
+## Variable limits: 0<=c_state'<=8
+| ! c_state@3' & ! c_state@2' & ! c_state@1' | ! c_state@0.0.8' 0
+
+[SYS_INIT]
+$ 1 & ! c_state@3 & ! c_state@2 & ! c_state@1 & ! c_state@0.0.8 1
+$ 1 & ! ^ clear_c@0.0.1 1 1
+
+
+## Variable limits: 0<=c_state<=8
+| ! c_state@3 & ! c_state@2 & ! c_state@1 | ! c_state@0.0.8 0
+
+[ENV_LIVENESS]
+# always eventually the obstactles will not be in the intersection
+& $ 1 & ! ^ clear_o@0.0.1 1 1 $ 1 & ! ^ clear_o@0.0.1' 1 1
+# always eventually a car that was initially present at 3, 4, or 7 will disappear from the intersection
+& & $ 1 & ! init_wait3@0.0.1 1 $ 1 & ! init_wait4@0.0.1 1 $ 1 & ! init_wait7@0.0.1 1
+
+
+[SYS_LIVENESS]
+# The car is eventually at 7
+$ 1 & ! c_state@3 & ! ^ c_state@2 1 & ! ^ c_state@1 1 & ! ^ c_state@0.0.8 0 1
+

@@ -1,0 +1,67 @@
+[INPUT]
+# obstacle
+o_state:0...8
+# park signal
+park:0...1 
+ 
+[OUTPUT]
+# controllable agent
+a_state:0...8
+
+[ENV_INIT]
+o_state = 1 || o_state = 4 || o_state = 7 
+
+[ENV_TRANS]
+# allowable obstacle motion
+o_state != 0
+o_state' != 0
+o_state != 2
+o_state' != 2
+o_state != 3
+o_state' != 3
+o_state != 5
+o_state' != 5
+o_state != 6
+o_state' != 6
+o_state != 8
+o_state' != 8
+o_state = 1 -> (o_state' = 1) || (o_state' = 4)
+o_state = 4 -> (o_state' = 4) || (o_state' = 1) || (o_state'=7)
+o_state = 7 -> (o_state' = 7) || (o_state' = 4)
+
+# when to turn park signal on or off
+park = 0 -> (park' = 0) || (park' = 1)
+(park = 1 && a_state != 0) -> (park' = 1)
+(park = 1 && a_state  = 0) -> (park' = 0)
+
+
+
+[ENV_LIVENESS]
+# either o_state = 7 or o_state = 1 needs to be included in ENV_LIVENESS
+#o_state = 7
+o_state = 1
+park = 1
+
+
+[SYS_TRANS]
+# allowable agent motion
+a_state = 0 -> (a_state' = 0) || (a_state' = 1) || (a_state' = 3)
+a_state = 3 -> (a_state' = 3) || (a_state' = 0) || (a_state' = 4) || (a_state'=6)
+a_state = 6 -> (a_state' = 6) || (a_state' = 3) || (a_state' = 7)
+a_state = 1 -> (a_state' = 1) || (a_state' = 0) || (a_state' = 4) || (a_state'=2)
+a_state = 4 -> (a_state' = 4) || (a_state' = 1) || (a_state' = 3) || (a_state'=5) || (a_state'=7)
+a_state = 7 -> (a_state' = 7) || (a_state' = 6) || (a_state' = 8) || (a_state'=4)
+a_state = 2 -> (a_state' = 2) || (a_state' = 1) || (a_state' = 5)
+a_state = 5 -> (a_state' = 5) || (a_state' = 2) || (a_state' = 4) || (a_state'=8)
+a_state = 8 -> (a_state' = 8) || (a_state' = 5) || (a_state' = 7)
+
+# do not collide with obstacle
+o_state != a_state
+o_state' != a_state
+o_state != a_state'
+
+[SYS_LIVENESS]
+# always eventually reach C8
+a_state = 8
+# always eventually reach C0 when the PARK signal occurs
+park=1 && a_state = 0

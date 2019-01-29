@@ -1,0 +1,73 @@
+[INPUT]
+# human
+h_state@0.0.3
+h_state@1
+# park signal
+h_closed@0.0.1
+
+
+[OUTPUT]
+# robot
+r_state@0.0.3
+r_state@1
+r_closed@0.0.1
+
+
+[ENV_TRANS]
+| ! & $ 1 & ! h_state@1 & ! h_state@0.0.3 1 $ 1 & ! h_closed@0.0.1 1 & $ 1 & ! h_state@1' & ! h_state@0.0.3' 1 | $ 1 & ! h_closed@0.0.1' 1 $ 1 & ! ^ h_closed@0.0.1' 1 1
+| ! & $ 1 & ! h_state@1 & ! h_state@0.0.3 1 $ 1 & ! ^ h_closed@0.0.1 1 1 & | $ 1 & ! h_state@1' & ! h_state@0.0.3' 1 $ 1 & ! h_state@1' & ! ^ h_state@0.0.3' 1 1 $ 1 & ! ^ h_closed@0.0.1' 1 1
+
+| ! & & $ 1 & ! h_state@1 & ! ^ h_state@0.0.3 1 1 $ 1 & ! ^ h_closed@0.0.1 1 1 $ 1 & ! r_state@1 & ! ^ r_state@0.0.3 1 1 & $ 1 & ! h_state@1' & ! ^ h_state@0.0.3' 1 1 $ 1 & ! h_closed@0.0.1' 1
+| ! & & $ 1 & ! h_state@1 & ! ^ h_state@0.0.3 1 1 $ 1 & ! h_closed@0.0.1 1 $ 1 & ! r_state@1 & ! ^ r_state@0.0.3 1 1 & $ 1 & ! h_state@1' & ! h_state@0.0.3' 1 $ 1 & ! h_closed@0.0.1' 1
+| ! & & $ 1 & ! h_state@1 & ! ^ h_state@0.0.3 1 1 $ 1 & ! ^ h_closed@0.0.1 1 1 $ 1 ! & ! r_state@1 & ! ^ r_state@0.0.3 1 1 & $ 1 & ! h_state@1' & ! ^ h_state@0.0.3' 1 1 $ 1 & ! ^ h_closed@0.0.1' 1 1
+
+$ 1 ! & ! ^ h_state@1 1 & ! ^ h_state@0.0.3 0 1
+$ 1 ! & ! ^ h_state@1' 1 & ! ^ h_state@0.0.3' 0 1
+$ 1 ! & ! ^ h_state@1 1 & ! ^ h_state@0.0.3 1 1
+$ 1 ! & ! ^ h_state@1' 1 & ! ^ h_state@0.0.3' 1 1
+
+
+
+
+[ENV_INIT]
+$ 1 & ! h_state@1 & ! h_state@0.0.3 1
+$ 1 & ! h_closed@0.0.1 1
+
+
+
+[SYS_TRANS]
+| ! & & $ 1 & ! h_state@1 & ! ^ h_state@0.0.3 1 1 $ 1 & ! r_closed@0.0.1 1 $ 1 & ! ^ r_state@1 1 & ! ^ r_state@0.0.3 1 1 & $ 1 & ! ^ r_state@1' 1 & ! ^ r_state@0.0.3' 0 1 $ 1 & ! r_closed@0.0.1' 1
+| ! & & $ 1 & ! h_state@1 & ! ^ h_state@0.0.3 1 1 $ 1 & ! r_closed@0.0.1 1 $ 1 & ! ^ r_state@1 1 & ! ^ r_state@0.0.3 0 1 & $ 1 & ! r_state@1' & ! ^ r_state@0.0.3' 1 1 $ 1 & ! r_closed@0.0.1' 1
+| ! & & $ 1 & ! h_state@1 & ! ^ h_state@0.0.3 1 1 $ 1 & ! r_closed@0.0.1 1 $ 1 & ! r_state@1 & ! ^ r_state@0.0.3 1 1 & $ 1 & ! r_state@1' & ! ^ r_state@0.0.3' 1 1 $ 1 & ! ^ r_closed@0.0.1' 1 1
+
+| ! & & $ 1 ! & ! h_state@1 & ! ^ h_state@0.0.3 1 1 $ 1 & ! ^ r_closed@0.0.1 1 1 $ 1 & ! r_state@1 & ! ^ r_state@0.0.3 1 1 & $ 1 & ! ^ r_state@1' 1 & ! ^ r_state@0.0.3' 0 1 $ 1 & ! ^ r_closed@0.0.1' 1 1
+| ! & & $ 1 ! & ! h_state@1 & ! ^ h_state@0.0.3 1 1 $ 1 & ! ^ r_closed@0.0.1 1 1 $ 1 & ! ^ r_state@1 1 & ! ^ r_state@0.0.3 0 1 & $ 1 & ! ^ r_state@1' 1 & ! ^ r_state@0.0.3' 1 1 $ 1 & ! ^ r_closed@0.0.1' 1 1
+| ! & & $ 1 ! & ! h_state@1 & ! ^ h_state@0.0.3 1 1 $ 1 & ! ^ r_closed@0.0.1 1 1 $ 1 & ! ^ r_state@1 1 & ! ^ r_state@0.0.3 1 1 & $ 1 & ! ^ r_state@1' 1 & ! ^ r_state@0.0.3' 1 1 $ 1 & ! r_closed@0.0.1' 1
+
+| ! & & $ 1 ! & ! h_state@1 & ! ^ h_state@0.0.3 1 1 $ 1 & ! r_closed@0.0.1 1 $ 1 & ! ^ r_state@1 1 & ! ^ r_state@0.0.3 1 1 & $ 1 & ! ^ r_state@1' 1 & ! ^ r_state@0.0.3' 0 1 $ 1 & ! r_closed@0.0.1' 1
+| ! & & $ 1 ! & ! h_state@1 & ! ^ h_state@0.0.3 1 1 $ 1 & ! r_closed@0.0.1 1 $ 1 & ! ^ r_state@1 1 & ! ^ r_state@0.0.3 0 1 & $ 1 & ! ^ r_state@1' 1 & ! ^ r_state@0.0.3' 0 1 $ 1 & ! r_closed@0.0.1' 1
+| ! & & $ 1 ! & ! h_state@1 & ! ^ h_state@0.0.3 1 1 $ 1 & ! r_closed@0.0.1 1 $ 1 & ! r_state@1 & ! ^ r_state@0.0.3 1 1 & $ 1 & ! ^ r_state@1' 1 & ! ^ r_state@0.0.3' 0 1 $ 1 & ! r_closed@0.0.1' 1
+
+
+$ 1 ! & ! r_state@1 & ! r_state@0.0.3 1
+$ 1 ! & ! r_state@1' & ! r_state@0.0.3' 1
+
+
+
+[SYS_INIT]
+$ 1 & ! ^ r_state@1 1 & ! ^ r_state@0.0.3 0 1
+$ 1 & ! r_closed@0.0.1 1
+
+
+[ENV_LIVENESS]
+# always eventually the human will hand over a plate
+#&& (r_state = 1)
+& $ 1 & ! h_state@1 & ! ^ h_state@0.0.3 1 1 $ 1 & ! ^ h_closed@0.0.1 1 1
+#(h_state = 0) && (h_closed = 1)
+
+
+[SYS_LIVENESS]
+# eventually the robot delivers the item in space 4
+& $ 1 & ! ^ r_closed@0.0.1 1 1 $ 1 & ! ^ r_state@1 1 & ! ^ r_state@0.0.3 1 1
+
+

@@ -1,0 +1,21 @@
+
+
+## Go straight to 3
+##FLOOR = 0 && (CALL1 = 3 || CALL2 = 3) -> FLOOR' = 1 && (OPEN0' = 0 && OPEN1' = 0 && OPEN2' = 0 && OPEN3' = 0)
+##FLOOR = 1 && (CALL1 = 3 || CALL2 = 3) -> FLOOR' = 2 && (OPEN0' = 0 && OPEN1' = 0 && OPEN2' = 0 && OPEN3' = 0)
+##FLOOR = 2 && (CALL1 = 3 || CALL2 = 3) -> FLOOR' = 3 && (OPEN0' = 0 && OPEN1' = 0 && OPEN2' = 0 && OPEN3' = 1)
+## ------------
+
+
+
+## Go straight to top floor
+##(CALL1 = 0 || CALL2 = 0) && (CALL1 != 3 || CALL2 != 3) && FLOOR = 0 -> OPEN0' = 1 
+##(CALL1 = 1 || CALL2 = 1) && (CALL1 != 3 || CALL2 != 3)  && FLOOR = 1 -> OPEN1' = 1 
+##(CALL1 = 2 || CALL2 = 2) && (CALL1 != 3 || CALL2 != 3)  && FLOOR = 2 -> OPEN2' = 1 
+##(CALL1 = 3 || CALL2 = 3) && FLOOR = 3 -> OPEN3' = 1 
+
+##(CALL1 = 0 || CALL2 = 0) && (CALL1 != 3 || CALL2 != 3) && FLOOR' = 0 -> OPEN0' = 1 
+##(CALL1 = 1 || CALL2 = 1) && (CALL1 != 3 || CALL2 != 3) && FLOOR' = 1 -> OPEN1' = 1 
+##(CALL1 = 2 || CALL2 = 2) && (CALL1 != 3 || CALL2 != 3) && FLOOR' = 2 -> OPEN2' = 1 
+##(CALL1 = 3 || CALL2 = 3) && (CALL1 != 3 || CALL2 != 3) && FLOOR' = 3 -> OPEN3' = 1 
+## --------------
