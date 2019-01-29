@@ -8,6 +8,7 @@ h_closed:0...1
 # robot
 r_state:0...3
 r_closed:0...1
+workload:0...25
 
 [ENV_INIT]
 h_state = 0

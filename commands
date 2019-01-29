@@ -10,3 +10,10 @@ SLUGS
 slugs_compiler dreamer.structuredslugs > dreamer.slugsin
 
 slugs dreamer.slugsin --explicitStrategy --jsonOutput > $slugs_hw5/two_player/ctrl.json
+
+----------------------------------
+
+
+slugs_compiler dreamer.structuredslugs > dreamer.slugsin
+
+slugs dreamer.slugsin --explicitStrategy --jsonOutput > $slugs_reactive/ctrl.json

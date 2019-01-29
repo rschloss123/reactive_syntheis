@@ -1,0 +1,103 @@
+[INPUT]
+# human
+#work
+wait
+#refill
+obstacle_1
+obstacle_2
+workload@0.0.25
+workload@1
+workload@2
+workload@3
+workload@4
+
+
+
+[OUTPUT]
+# robot
+r_state@0.0.3
+r_state@1
+workload_add@0.0.15
+workload_add@1
+workload_add@2
+workload_add@3
+robot_approaching_workstation
+
+
+[ENV_TRANS]
+# Obstacles will get out of the way
+| ! obstacle_1 ! obstacle_1'
+| ! obstacle_2 ! obstacle_2'
+# Obstacle will not intentionally interfere with the robot
+| ! $ 1 & ! r_state@1 & ! ^ r_state@0.0.3 1 1 ! obstacle_1
+| ! $ 1 & ! ^ r_state@1 1 & ! ^ r_state@0.0.3 0 1 ! obstacle_2
+
+
+| ! & $ 1 & ! workload@4 & ! workload@3 & ! workload@2 & ! workload@1 & ! workload@0.0.25 1 $ 1 ! & ! ^ r_state@1 1 & ! ^ r_state@0.0.3 1 1 wait
+| ! $ 1 ! & ! workload@4 & ! workload@3 & ! workload@2 & ! workload@1 & ! workload@0.0.25 1 ! wait
+| ! & wait $ 11 ^ workload_add@0.0.15 workload@0.0.25 & workload_add@0.0.15 workload@0.0.25 ^ ^ workload_add@1 workload@1 ? 1 | | & workload_add@1 workload@1 & ? 1 workload_add@1 & ? 1 workload@1 ^ ^ workload_add@2 workload@2 ? 3 | | & workload_add@2 workload@2 & ? 3 workload_add@2 & ? 3 workload@2 ^ ^ workload_add@3 workload@3 ? 5 | | & workload_add@3 workload@3 & ? 5 workload_add@3 & ? 5 workload@3 ^ workload@4 ? 7 & workload@4 ? 7 & ! ? 9 & ! ? 8 & ! ? 6 & ! ? 4 & ! ? 2 & ! ? 0 1 wait'
+
+| ! & robot_approaching_workstation $ 11 ^ workload_add@0.0.15 workload@0.0.25 & workload_add@0.0.15 workload@0.0.25 ^ ^ workload_add@1 workload@1 ? 1 | | & workload_add@1 workload@1 & ? 1 workload_add@1 & ? 1 workload@1 ^ ^ workload_add@2 workload@2 ? 3 | | & workload_add@2 workload@2 & ? 3 workload_add@2 & ? 3 workload@2 ^ ^ workload_add@3 workload@3 ? 5 | | & workload_add@3 workload@3 & ? 5 workload_add@3 & ? 5 workload@3 ^ workload@4 ? 7 & workload@4 ? 7 & ! ? 9 | & ! ? 8 1 & | 1 ! ? 8 | & ! ? 6 1 & | 1 ! ? 6 | & ! ? 4 0 & | 0 ! ? 4 | & ! ? 2 0 & | 0 ! ? 2 | & ! ? 0 1 & | 1 ! ? 0 1 $ 11 ^ workload_add@0.0.15 workload@0.0.25 & workload_add@0.0.15 workload@0.0.25 ^ ^ workload_add@1 workload@1 ? 1 | | & workload_add@1 workload@1 & ? 1 workload_add@1 & ? 1 workload@1 ^ ^ workload_add@2 workload@2 ? 3 | | & workload_add@2 workload@2 & ? 3 workload_add@2 & ? 3 workload@2 ^ ^ workload_add@3 workload@3 ? 5 | | & workload_add@3 workload@3 & ? 5 workload_add@3 & ? 5 workload@3 ^ workload@4 ? 7 & workload@4 ? 7 & ! ? 9 & ! ^ workload@4' ? 8 & ! ^ workload@3' ? 6 & ! ^ workload@2' ? 4 & ! ^ workload@1' ? 2 & ! ^ workload@0.0.25' ? 0 1
+| ! & robot_approaching_workstation $ 11 ^ workload_add@0.0.15 workload@0.0.25 & workload_add@0.0.15 workload@0.0.25 ^ ^ workload_add@1 workload@1 ? 1 | | & workload_add@1 workload@1 & ? 1 workload_add@1 & ? 1 workload@1 ^ ^ workload_add@2 workload@2 ? 3 | | & workload_add@2 workload@2 & ? 3 workload_add@2 & ? 3 workload@2 ^ ^ workload_add@3 workload@3 ? 5 | | & workload_add@3 workload@3 & ? 5 workload_add@3 & ? 5 workload@3 ^ workload@4 ? 7 & workload@4 ? 7 | ? 9 | & ? 8 ! 1 & | ! 1 ? 8 | & ? 6 ! 1 & | ! 1 ? 6 | & ? 4 ! 0 & | ! 0 ? 4 | & ? 2 ! 0 & | ! 0 ? 2 | & ? 0 ! 1 & | ! 1 ? 0 0 $ 1 & ! ^ workload@4' 1 & ! ^ workload@3' 1 & ! ^ workload@2' 0 & ! ^ workload@1' 0 & ! ^ workload@0.0.25' 1 1
+
+#(r_state != 3 & !wait) -> (workload'+1 = workload)
+| ! & ! robot_approaching_workstation ! wait $ 11 ^ 1 workload@0.0.25' & 1 workload@0.0.25' ^ workload@1' ? 1 & workload@1' ? 1 ^ workload@2' ? 3 & workload@2' ? 3 ^ workload@3' ? 5 & workload@3' ? 5 ^ workload@4' ? 7 & workload@4' ? 7 & ! ? 9 & ! ^ ? 8 workload@4 & ! ^ ? 6 workload@3 & ! ^ ? 4 workload@2 & ! ^ ? 2 workload@1 & ! ^ ? 0 workload@0.0.25 1
+
+
+#(work & !wait & !refill) || (!work & wait & !refill) || (!work & !wait & refill)
+
+#workload = 0 & r_state != 3 -> wait
+#workload != 0 & r_state != 3 -> work
+#r_state != 3 -> !refill
+#r_state = 3 -> refill
+
+#(work & r_state != 3) -> (workload'+1 = workload)
+#wait -> workload' = workload
+#refill & workload+15 <= 25 -> (workload' = workload+15)
+#refill & workload+15 >  25 -> (workload' = 25)
+
+
+## Variable limits: 0<=workload'<=25
+| ! workload@4' | ! workload@3' & ! workload@2' | ! workload@1' & ! workload@0.0.25' 0
+
+[ENV_INIT]
+#work & !wait & !refill
+! wait
+
+
+## Variable limits: 0<=workload<=25
+| ! workload@4 | ! workload@3 & ! workload@2 | ! workload@1 & ! workload@0.0.25 0
+
+[SYS_TRANS]
+| ! $ 1 & ! ^ r_state@1' 1 & ! ^ r_state@0.0.3' 1 1 robot_approaching_workstation
+| ! $ 1 ! & ! ^ r_state@1' 1 & ! ^ r_state@0.0.3' 1 1 ! robot_approaching_workstation
+
+| ! & $ 1 & ! ^ r_state@1 1 & ! ^ r_state@0.0.3 0 1 robot_approaching_workstation $ 1 & ! ^ workload_add@3 1 & ! ^ workload_add@2 1 & ! ^ workload_add@1 1 & ! ^ workload_add@0.0.15 1 1
+| & robot_approaching_workstation | $ 1 & ! workload_add@3 & ! workload_add@2 & ! workload_add@1 & ! workload_add@0.0.15 1 $ 1 & ! ^ workload_add@3 1 & ! ^ workload_add@2 1 & ! ^ workload_add@1 1 & ! ^ workload_add@0.0.15 1 1 & ! robot_approaching_workstation $ 1 & ! workload_add@3 & ! workload_add@2 & ! workload_add@1 & ! workload_add@0.0.15 1
+
+
+| ! & $ 1 & ! r_state@1 & ! r_state@0.0.3 1 obstacle_1 $ 1 & ! r_state@1' & ! r_state@0.0.3' 1
+| ! & $ 1 & ! ^ r_state@1 1 & ! ^ r_state@0.0.3 0 1 obstacle_1 | $ 1 & ! ^ r_state@1' 1 & ! ^ r_state@0.0.3' 0 1 $ 1 & ! ^ r_state@1' 1 & ! ^ r_state@0.0.3' 1 1
+| ! & $ 1 & ! r_state@1 & ! ^ r_state@0.0.3 1 1 obstacle_2 | $ 1 & ! r_state@1' & ! ^ r_state@0.0.3' 1 1 $ 1 & ! r_state@1' & ! r_state@0.0.3' 1
+| ! & $ 1 & ! ^ r_state@1 1 & ! ^ r_state@0.0.3 1 1 obstacle_2 $ 1 & ! ^ r_state@1' 1 & ! ^ r_state@0.0.3' 1 1
+
+| ! $ 1 & ! r_state@1 & ! r_state@0.0.3 1 | $ 1 & ! r_state@1' & ! r_state@0.0.3' 1 $ 1 & ! r_state@1' & ! ^ r_state@0.0.3' 1 1
+| ! $ 1 & ! r_state@1 & ! ^ r_state@0.0.3 1 1 | | $ 1 & ! r_state@1' & ! r_state@0.0.3' 1 $ 1 & ! r_state@1' & ! ^ r_state@0.0.3' 1 1 $ 1 & ! ^ r_state@1' 1 & ! ^ r_state@0.0.3' 0 1
+| ! $ 1 & ! ^ r_state@1 1 & ! ^ r_state@0.0.3 0 1 | | $ 1 & ! r_state@1' & ! ^ r_state@0.0.3' 1 1 $ 1 & ! ^ r_state@1' 1 & ! ^ r_state@0.0.3' 0 1 $ 1 & ! ^ r_state@1' 1 & ! ^ r_state@0.0.3' 1 1
+| ! $ 1 & ! ^ r_state@1 1 & ! ^ r_state@0.0.3 1 1 | $ 1 & ! ^ r_state@1' 1 & ! ^ r_state@0.0.3' 0 1 $ 1 & ! ^ r_state@1' 1 & ! ^ r_state@0.0.3' 1 1
+
+
+
+[SYS_INIT]
+$ 1 & ! r_state@1 & ! r_state@0.0.3 1
+! robot_approaching_workstation
+
+
+
+[ENV_LIVENESS]
+
+
+
+[SYS_LIVENESS]
+& & $ 1 | & ! workload@4 1 & | 1 ! workload@4 | & ! workload@3 0 & | 0 ! workload@3 | & ! workload@2 1 & | 1 ! workload@2 | & ! workload@1 0 & | 0 ! workload@1 | & ! workload@0.0.25 0 & | 0 ! workload@0.0.25 1 $ 1 & ! ^ r_state@1 1 & ! ^ r_state@0.0.3 1 1 $ 1 | workload_add@3 | workload_add@2 | workload_add@1 | workload_add@0.0.15 0
+
