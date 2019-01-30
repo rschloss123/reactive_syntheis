@@ -81,19 +81,20 @@ def main():
 	
 	delivery_lookup = [
 		{'name': 'wait', 'bits': 1},
-		{'name': 'obstacle1', 'bits': 1},
 		{'name': 'obstacle2', 'bits': 1},
+		{'name': 'obstacle3', 'bits': 1},
 		{'name': 'workload', 'bits': 5},
 		{'name': 'complete_work_at_workstation', 'bits': 1},
-		{'name': 'r_state', 'bits': 2},
+		{'name': 'r_state', 'bits': 3},
 		{'name': 'workload_add', 'bits': 4},
 		{'name': 'next_state_is_workstation', 'bits': 1},
-		{'name': 'complete_work_with_robot', 'bits': 1}
+		{'name': 'complete_work_with_robot', 'bits': 1},
+		{'name': 'complete_dropoff_success', 'bits': 1}
 	]
 
 	delivery_file = '/home/rachel/reactive_synthesis/hri_reactive_synthesis/ctrl.json'
 	delivery_sim = Controller(delivery_lookup, delivery_file)
-	node_init = '16'
+	node_init = '50'
 	var_list = delivery_sim.simulate(node_init, 60)
 
 	

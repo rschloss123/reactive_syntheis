@@ -3,17 +3,18 @@
 #work
 wait
 #next_state_is_workstation
-obstacle_1
 obstacle_2
+obstacle_3
 workload:0...25
 complete_work_at_workstation
 
 [OUTPUT]
 # robot
-r_state:0...3
+r_state:0...4
 workload_add:0...15
 next_state_is_workstation
 complete_work_with_robot
+complete_dropoff_success
 
 
 [ENV_INIT]
@@ -21,20 +22,20 @@ complete_work_with_robot
 !complete_work_at_workstation 
 
 [SYS_INIT]
-r_state = 0
+r_state = 1
 !next_state_is_workstation
 !complete_work_with_robot
 
 
 [ENV_TRANS]
 # Obstacles will get out of the way
-obstacle_1 -> !obstacle_1'
 obstacle_2 -> !obstacle_2'
+obstacle_3 -> !obstacle_3'
 # Obstacle will not intentionally interfere with the robot
-r_state = 1 -> !obstacle_1
 r_state = 2 -> !obstacle_2
+r_state = 3 -> !obstacle_3
 
-workload = 0 & r_state != 3 -> wait
+workload = 0 & r_state != 4 -> wait
 workload != 0 -> !wait
 wait & (workload + workload_add = 0) -> wait' 
 
@@ -50,27 +51,40 @@ next_state_is_workstation -> !complete_work_at_workstation'
 
 
 [SYS_TRANS]
-(r_state' = 3)  -> next_state_is_workstation
-(r_state' != 3) -> !next_state_is_workstation
+(r_state' = 4)  -> next_state_is_workstation
+(r_state' != 4) -> !next_state_is_workstation
 
-r_state = 2 & next_state_is_workstation -> workload_add = 15
+
+r_state = 3 & next_state_is_workstation -> workload_add = 15
 (next_state_is_workstation & (workload_add = 0 || workload_add = 15)) || (!next_state_is_workstation & workload_add = 0)
 
 next_state_is_workstation & complete_work_at_workstation -> complete_work_with_robot' 
 
-complete_work_with_robot & r_state' != 0 -> complete_work_with_robot'
-complete_work_with_robot & r_state' = 0  -> !complete_work_with_robot'
 
-(r_state = 0) & (obstacle_1) -> (r_state' = 0) 
-(r_state = 2) & (obstacle_1) -> (r_state' = 2) || (r_state' = 3) 
-(r_state = 1) & (obstacle_2) -> (r_state' = 1) || (r_state' = 0) 
-(r_state = 3) & (obstacle_2) -> (r_state' = 3) 
+complete_work_with_robot & r_state != 0 -> complete_work_with_robot'
+complete_work_with_robot & r_state = 0 -> !complete_work_with_robot'
+!complete_work_with_robot & !next_state_is_workstation -> !complete_work_with_robot'
+
+#complete_work_with_robot & r_state = 0 & complete_dropoff_success -> !complete_work_with_robot'
+#complete_work_with_robot & r_state = 0 & !complete_dropoff_success -> complete_work_with_robot'
+
+
+
+(r_state = 0) & (obstacle_2) -> (r_state' = 0) || (r_state' = 1)
+(r_state = 1) & (obstacle_2) -> (r_state' = 0) || (r_state' = 1)
+(r_state = 3) & (obstacle_2) -> (r_state' = 3) || (r_state' = 4) 
+(r_state = 2) & (obstacle_3) -> (r_state' = 1) || (r_state' = 0) 
+(r_state = 4) & (obstacle_3) -> (r_state' = 4) 
 
 (r_state = 0) -> (r_state' = 0) || (r_state' = 1)
-(r_state = 1) -> (r_state' = 0) || (r_state' = 1) || (r_state' = 2)
-(r_state = 2) -> (r_state' = 1) || (r_state' = 2) || (r_state' = 3)
-(r_state = 3) -> (r_state' = 2) || (r_state' = 3)
+(r_state = 1) -> (r_state' = 1) || (r_state' = 2) 
+(r_state = 2) & complete_work_with_robot  -> (r_state' = 0) || (r_state' = 2) || (r_state' = 3)
+(r_state = 2) & !complete_work_with_robot -> (r_state' = 1) || (r_state' = 2) || (r_state' = 3)
+(r_state = 3) -> (r_state' = 2) || (r_state' = 3) || (r_state' = 4)
+(r_state = 4) -> (r_state' = 4) || (r_state' = 3)
 
 
 [SYS_LIVENESS]
-(workload > 0) & (workload <= 20) & (r_state = 3) & (workload_add > 0)
+(r_state = 0) 
+(r_state = 4)
+#(workload > 0) & (workload <= 20) & (r_state = 4) & (workload_add > 0)
