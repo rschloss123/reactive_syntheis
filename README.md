@@ -21,3 +21,7 @@ I have the following shortcuts in my .bashrc to use these commands:
 alias slugs_compiler="python /home/rachel/reactive_synthesis/slugs/tools/StructuredSlugsParser/compiler.py"
 slugs_reactive="/home/rachel/reactive_synthesis/hri_reactive_synthesis"
 ```
+
+You can then simulate a sample path by running sim_paths.py.
+
+The variable "node_init" allows you to start the simulation from a different initial state. 
