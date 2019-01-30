@@ -1,8 +1,6 @@
 [INPUT]
 # human
-#work
 wait
-#next_state_is_workstation
 obstacle_2
 obstacle_3
 workload:0...25
@@ -15,16 +13,19 @@ workload_add:0...15
 next_state_is_workstation
 complete_work_with_robot
 complete_dropoff_success
+complete_dropoff_tries
 
 
 [ENV_INIT]
 !wait
 !complete_work_at_workstation 
+workload = 20
 
 [SYS_INIT]
 r_state = 1
 !next_state_is_workstation
 !complete_work_with_robot
+workload_add = 0
 
 
 [ENV_TRANS]
@@ -51,13 +52,16 @@ next_state_is_workstation -> !complete_work_at_workstation'
 
 
 [SYS_TRANS]
+
+# Flags
 (r_state' = 4)  -> next_state_is_workstation
 (r_state' != 4) -> !next_state_is_workstation
 
-
+# Transferring work to human 
 r_state = 3 & next_state_is_workstation -> workload_add = 15
 (next_state_is_workstation & (workload_add = 0 || workload_add = 15)) || (!next_state_is_workstation & workload_add = 0)
 
+# Flag for when robot has completed work with it
 next_state_is_workstation & complete_work_at_workstation -> complete_work_with_robot' 
 
 
@@ -68,8 +72,7 @@ complete_work_with_robot & r_state = 0 -> !complete_work_with_robot'
 #complete_work_with_robot & r_state = 0 & complete_dropoff_success -> !complete_work_with_robot'
 #complete_work_with_robot & r_state = 0 & !complete_dropoff_success -> complete_work_with_robot'
 
-
-
+# Allowable robot transitions
 (r_state = 0) & (obstacle_2) -> (r_state' = 0) || (r_state' = 1)
 (r_state = 1) & (obstacle_2) -> (r_state' = 0) || (r_state' = 1)
 (r_state = 3) & (obstacle_2) -> (r_state' = 3) || (r_state' = 4) 
@@ -83,6 +86,9 @@ complete_work_with_robot & r_state = 0 -> !complete_work_with_robot'
 (r_state = 3) -> (r_state' = 2) || (r_state' = 3) || (r_state' = 4)
 (r_state = 4) -> (r_state' = 4) || (r_state' = 3)
 
+workload > 0
+
+(workload <= 20)
 
 [SYS_LIVENESS]
 (r_state = 0) 

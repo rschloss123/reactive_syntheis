@@ -1,8 +1,6 @@
 [INPUT]
 # human
-#work
 wait
-#next_state_is_workstation
 obstacle_2
 obstacle_3
 workload@0.0.25
@@ -54,6 +52,7 @@ complete_dropoff_success
 [ENV_INIT]
 ! wait
 ! complete_work_at_workstation
+$ 1 & ! ^ workload@4 1 & ! ^ workload@3 0 & ! ^ workload@2 1 & ! ^ workload@1 0 & ! ^ workload@0.0.25 0 1
 
 ## Variable limits: 0<=workload<=25
 | ! workload@4 | ! workload@3 & ! workload@2 | ! workload@1 & ! workload@0.0.25 0
@@ -91,6 +90,9 @@ complete_dropoff_success
 | ! $ 1 & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 1 1 | | $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 0 1 $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 1 1 $ 1 & ! ^ r_state@2' 1 & ! ^ r_state@1' 0 & ! ^ r_state@0.0.4' 0 1
 | ! $ 1 & ! ^ r_state@2 1 & ! ^ r_state@1 0 & ! ^ r_state@0.0.4 0 1 | $ 1 & ! ^ r_state@2' 1 & ! ^ r_state@1' 0 & ! ^ r_state@0.0.4' 0 1 $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 1 1
 
+$ 1 | workload@4 | workload@3 | workload@2 | workload@1 | workload@0.0.25 0
+
+$ 1 | & ! workload@4 1 & | 1 ! workload@4 | & ! workload@3 0 & | 0 ! workload@3 | & ! workload@2 1 & | 1 ! workload@2 | & ! workload@1 0 & | 0 ! workload@1 | & ! workload@0.0.25 0 & | 0 ! workload@0.0.25 1
 
 ## Variable limits: 0<=r_state'<=4
 | ! r_state@2' & ! r_state@1' | ! r_state@0.0.4' 0
@@ -99,6 +101,7 @@ complete_dropoff_success
 $ 1 & ! r_state@2 & ! r_state@1 & ! ^ r_state@0.0.4 1 1
 ! next_state_is_workstation
 ! complete_work_with_robot
+$ 1 & ! workload_add@3 & ! workload_add@2 & ! workload_add@1 & ! workload_add@0.0.15 1
 
 
 ## Variable limits: 0<=r_state<=4
