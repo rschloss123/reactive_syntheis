@@ -2,26 +2,28 @@
 # human
 #work
 wait
-#refill
+#next_state_is_workstation
 obstacle_1
 obstacle_2
 workload:0...25
-
+complete_work_at_workstation
 
 [OUTPUT]
 # robot
 r_state:0...3
 workload_add:0...15
-robot_approaching_workstation
+next_state_is_workstation
+complete_work_with_robot
+
 
 [ENV_INIT]
-#work & !wait & !refill
 !wait
-
+!complete_work_at_workstation 
 
 [SYS_INIT]
 r_state = 0
-!robot_approaching_workstation
+!next_state_is_workstation
+!complete_work_with_robot
 
 
 [ENV_TRANS]
@@ -32,41 +34,32 @@ obstacle_2 -> !obstacle_2'
 r_state = 1 -> !obstacle_1
 r_state = 2 -> !obstacle_2
 
-
 workload = 0 & r_state != 3 -> wait
 workload != 0 -> !wait
 wait & (workload + workload_add = 0) -> wait' 
 
-robot_approaching_workstation & workload+workload_add <= 25 -> (workload' = workload+workload_add)
-robot_approaching_workstation & workload+workload_add >  25 -> (workload' = 25)
+next_state_is_workstation & workload+workload_add <= 25 -> (workload' = workload+workload_add)
+next_state_is_workstation & workload+workload_add >  25 -> (workload' = 25)
 
-#(r_state != 3 & !wait) -> (workload'+1 = workload)
-(!robot_approaching_workstation & !wait) -> (workload'+1 = workload)
+(!next_state_is_workstation & !wait) -> (workload'+1 = workload)
 
-
-#(work & !wait & !refill) || (!work & wait & !refill) || (!work & !wait & refill)
-
-#workload = 0 & r_state != 3 -> wait
-#workload != 0 & r_state != 3 -> work
-#r_state != 3 -> !refill
-#r_state = 3 -> refill
-
-#(work & r_state != 3) -> (workload'+1 = workload)
-#wait -> workload' = workload
-#refill & workload+15 <= 25 -> (workload' = workload+15)
-#refill & workload+15 >  25 -> (workload' = 25)
-
+workload' < workload -> complete_work_at_workstation'
+next_state_is_workstation -> !complete_work_at_workstation'
 
 [ENV_LIVENESS]
 
 
 [SYS_TRANS]
-(r_state' = 3)  -> robot_approaching_workstation
-(r_state' != 3) -> !robot_approaching_workstation
+(r_state' = 3)  -> next_state_is_workstation
+(r_state' != 3) -> !next_state_is_workstation
 
-r_state = 2 & robot_approaching_workstation -> workload_add = 15
-(robot_approaching_workstation & (workload_add = 0 || workload_add = 15)) || (!robot_approaching_workstation & workload_add = 0)
+r_state = 2 & next_state_is_workstation -> workload_add = 15
+(next_state_is_workstation & (workload_add = 0 || workload_add = 15)) || (!next_state_is_workstation & workload_add = 0)
 
+next_state_is_workstation & complete_work_at_workstation -> complete_work_with_robot' 
+
+complete_work_with_robot & r_state' != 0 -> complete_work_with_robot'
+complete_work_with_robot & r_state' = 0  -> !complete_work_with_robot'
 
 (r_state = 0) & (obstacle_1) -> (r_state' = 0) 
 (r_state = 2) & (obstacle_1) -> (r_state' = 2) || (r_state' = 3) 
@@ -80,4 +73,4 @@ r_state = 2 & robot_approaching_workstation -> workload_add = 15
 
 
 [SYS_LIVENESS]
-(workload <= 20) & (r_state = 3) & (workload_add > 0)
+(workload > 0) & (workload <= 20) & (r_state = 3) & (workload_add > 0)

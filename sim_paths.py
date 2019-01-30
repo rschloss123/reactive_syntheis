@@ -80,16 +80,15 @@ class Controller():
 def main(): 
 	
 	delivery_lookup = [
-		# {'name': 'work', 'bits': 1},
-	
 		{'name': 'wait', 'bits': 1},
-		# {'name': 'refill', 'bits': 1},
 		{'name': 'obstacle1', 'bits': 1},
 		{'name': 'obstacle2', 'bits': 1},
 		{'name': 'workload', 'bits': 5},
+		{'name': 'complete_work_at_workstation', 'bits': 1},
 		{'name': 'r_state', 'bits': 2},
 		{'name': 'workload_add', 'bits': 4},
-		{'name': 'refill', 'bits': 1}
+		{'name': 'next_state_is_workstation', 'bits': 1},
+		{'name': 'complete_work_with_robot', 'bits': 1}
 	]
 
 	delivery_file = '/home/rachel/reactive_synthesis/hri_reactive_synthesis/ctrl.json'
