@@ -1,10 +1,10 @@
-#Installing Slugs
+# Installing Slugs
 
 https://github.com/VerifiableRobotics/slugs.git
 
 There is readme file for how to install.
 
-#To try out the files 
+# To try out the files 
 Navigate to the folder "hri_reactive_synthesis." Then run the following commands in the terminal:
 
 
