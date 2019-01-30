@@ -95,8 +95,8 @@ def main():
 
 	delivery_file = '/home/rachel/reactive_synthesis/hri_reactive_synthesis/ctrl.json'
 	delivery_sim = Controller(delivery_lookup, delivery_file)
-	node_init = '0'
-	var_list = delivery_sim.simulate(node_init, 60)
+	node_init = '285'
+	var_list = delivery_sim.simulate(node_init, 3)
 
 	
 
