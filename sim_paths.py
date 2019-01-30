@@ -28,6 +28,46 @@ def clean(js):
 		if not terminal_nodes:
 			return js
 
+def variables_to_base10(node, name_and_bits):
+
+	state_binary = node['state']
+	count = 0 
+
+	list_local = []
+	variable_dictionary = {}
+
+
+	for j in name_and_bits:
+
+		# j is equal to a dictionary
+		name = j['name']
+		bits = j['bits']
+
+		# create array slice from an array of numbers
+		bin_string = state_binary[count:count+bits] # grab the section 
+		bin_string = bin_string[::-1] # reverse the section
+		# make an array of strings 
+		bin_string = [str(str_var) for str_var in bin_string] 
+		# make into string
+		bin_string = ''.join(bin_string)
+
+		val_base_10 = int(bin_string,2)
+
+		print name+":", val_base_10
+		 
+
+		list_local.append(val_base_10)
+		
+		variable_dictionary[name] = val_base_10
+		transitions = node['trans']
+		count+=bits 
+
+
+
+	return list_local, variable_dictionary, transitions	
+
+
+
 class Controller():
 
 	def __init__(self, name_and_bits, file_name):
@@ -54,37 +94,9 @@ class Controller():
 			print " "
 			print "Node #", node_num
 
-			state_binary = node['state']
-			count = 0 
+			list_local, _, _ = variables_to_base10(node, self.name_and_bits)
 
-			list_local = []
-
-			for j in self.name_and_bits:
-
-
-				# j is equal to a dictionary
-				name = j['name']
-				bits = j['bits']
-
-				# create array slice from an array of numbers
-				bin_string = state_binary[count:count+bits] # grab the section 
-				bin_string = bin_string[::-1] # reverse the section
-				# make an array of strings 
-				bin_string = [str(str_var) for str_var in bin_string] 
-				# make into string
-				bin_string = ''.join(bin_string)
-
-				val_base_10 = int(bin_string,2)
-
-				print name+":", val_base_10
-				 
-
-				list_local.append(val_base_10)
-
-				count+=bits 
-
-			var_list.append(list_local)
-
+			var_list.append(list_local)	
 			transition_options =  node['trans']
 
 			not_empty = 0
@@ -101,9 +113,20 @@ class Controller():
 		# var_list is for simulation
 		return var_list
 
+	def json_to_dictionary(self):
 
+		node_dictionary = {}
+		transition_dictionary = {}
 
+		for key, node in self.file_content['nodes'].items():
+			_, dictionary_local, transition_local = variables_to_base10(node, self.name_and_bits)
+			node_dictionary[str(key)] = dictionary_local
+			transition_dictionary[str(key)] = transition_local
 
+		print node_dictionary
+		print " "
+		print transition_dictionary
+		
 
 def main(): 
 	
@@ -126,7 +149,8 @@ def main():
 	delivery_file = '/home/rachel/reactive_synthesis/hri_reactive_synthesis/ctrl.json'
 	delivery_sim = Controller(delivery_lookup, delivery_file)
 	node_init = '0'
-	var_list = delivery_sim.simulate(node_init, 50)
+	# var_list = delivery_sim.simulate(node_init, 50)
+	delivery_sim.json_to_dictionary()
 
 	
 
