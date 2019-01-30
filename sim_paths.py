@@ -89,7 +89,8 @@ def main():
 		{'name': 'workload_add', 'bits': 4},
 		{'name': 'next_state_is_workstation', 'bits': 1},
 		{'name': 'complete_work_with_robot', 'bits': 1},
-		{'name': 'complete_dropoff_success', 'bits': 1}
+		{'name': 'complete_dropoff_success', 'bits': 1},
+		{'name': 'complete_dropoff_tries', 'bits': 2}
 	]
 
 	delivery_file = '/home/rachel/reactive_synthesis/hri_reactive_synthesis/ctrl.json'

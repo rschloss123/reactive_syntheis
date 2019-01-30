@@ -23,6 +23,8 @@ workload_add@3
 next_state_is_workstation
 complete_work_with_robot
 complete_dropoff_success
+complete_dropoff_tries@0.0.3
+complete_dropoff_tries@1
 
 
 
@@ -58,25 +60,39 @@ $ 1 & ! ^ workload@4 1 & ! ^ workload@3 0 & ! ^ workload@2 1 & ! ^ workload@1 0 
 | ! workload@4 | ! workload@3 & ! workload@2 | ! workload@1 & ! workload@0.0.25 0
 
 [SYS_TRANS]
+
+# Flags
 | ! $ 1 & ! ^ r_state@2' 1 & ! ^ r_state@1' 0 & ! ^ r_state@0.0.4' 0 1 next_state_is_workstation
 | ! $ 1 ! & ! ^ r_state@2' 1 & ! ^ r_state@1' 0 & ! ^ r_state@0.0.4' 0 1 ! next_state_is_workstation
 
-
+# Transferring work to human
 | ! & $ 1 & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 1 1 next_state_is_workstation $ 1 & ! ^ workload_add@3 1 & ! ^ workload_add@2 1 & ! ^ workload_add@1 1 & ! ^ workload_add@0.0.15 1 1
 | & next_state_is_workstation | $ 1 & ! workload_add@3 & ! workload_add@2 & ! workload_add@1 & ! workload_add@0.0.15 1 $ 1 & ! ^ workload_add@3 1 & ! ^ workload_add@2 1 & ! ^ workload_add@1 1 & ! ^ workload_add@0.0.15 1 1 & ! next_state_is_workstation $ 1 & ! workload_add@3 & ! workload_add@2 & ! workload_add@1 & ! workload_add@0.0.15 1
 
+# Flag for when robot has completed work with it
 | ! & next_state_is_workstation complete_work_at_workstation complete_work_with_robot'
 
 
+#complete_work_with_robot & r_state != 0 -> complete_work_with_robot'
+#complete_work_with_robot & r_state = 0 -> !complete_work_with_robot'
+#!complete_work_with_robot & !next_state_is_workstation -> !complete_work_with_robot'
+
 | ! & complete_work_with_robot $ 1 ! & ! r_state@2 & ! r_state@1 & ! r_state@0.0.4 1 complete_work_with_robot'
-| ! & complete_work_with_robot $ 1 & ! r_state@2 & ! r_state@1 & ! r_state@0.0.4 1 ! complete_work_with_robot'
 | ! & ! complete_work_with_robot ! next_state_is_workstation ! complete_work_with_robot'
 
-#complete_work_with_robot & r_state = 0 & complete_dropoff_success -> !complete_work_with_robot'
-#complete_work_with_robot & r_state = 0 & !complete_dropoff_success -> complete_work_with_robot'
+| ! & & complete_work_with_robot $ 1 & ! r_state@2 & ! r_state@1 & ! r_state@0.0.4 1 complete_dropoff_success ! complete_work_with_robot'
+| ! & & complete_work_with_robot $ 1 & ! r_state@2 & ! r_state@1 & ! r_state@0.0.4 1 ! complete_dropoff_success complete_work_with_robot'
+
+| ! & & complete_work_with_robot $ 1 & ! r_state@2 & ! r_state@1 & ! r_state@0.0.4 1 $ 1 | & ! complete_dropoff_tries@1 1 & | 1 ! complete_dropoff_tries@1 | & ! complete_dropoff_tries@0.0.3 1 & | 1 ! complete_dropoff_tries@0.0.3 0 & $ 5 ^ 1 complete_dropoff_tries@0.0.3 & 1 complete_dropoff_tries@0.0.3 ^ complete_dropoff_tries@1 ? 1 & complete_dropoff_tries@1 ? 1 & ! ? 3 & ! ^ complete_dropoff_tries@1' ? 2 & ! ^ complete_dropoff_tries@0.0.3' ? 0 1 | complete_dropoff_success ! complete_dropoff_success
+| ! & & complete_work_with_robot $ 1 & ! r_state@2 & ! r_state@1 & ! r_state@0.0.4 1 $ 1 & ! ^ complete_dropoff_tries@1 1 & ! ^ complete_dropoff_tries@0.0.3 1 1 & $ 1 & ! complete_dropoff_tries@1' & ! complete_dropoff_tries@0.0.3' 1 complete_dropoff_success
 
 
+| ! $ 1 ! & ! r_state@2 & ! r_state@1 & ! r_state@0.0.4 1 ! complete_dropoff_success
 
+| ! & $ 1 & ! r_state@2 & ! r_state@1 & ! r_state@0.0.4 1 ! complete_dropoff_success $ 1 & ! r_state@2' & ! r_state@1' & ! r_state@0.0.4' 1
+| ! & $ 1 & ! r_state@2 & ! r_state@1 & ! r_state@0.0.4 1 complete_dropoff_success $ 1 & ! r_state@2' & ! r_state@1' & ! ^ r_state@0.0.4' 1 1
+
+# Allowable robot transitions
 | ! & $ 1 & ! r_state@2 & ! r_state@1 & ! r_state@0.0.4 1 obstacle_2 | $ 1 & ! r_state@2' & ! r_state@1' & ! r_state@0.0.4' 1 $ 1 & ! r_state@2' & ! r_state@1' & ! ^ r_state@0.0.4' 1 1
 | ! & $ 1 & ! r_state@2 & ! r_state@1 & ! ^ r_state@0.0.4 1 1 obstacle_2 | $ 1 & ! r_state@2' & ! r_state@1' & ! r_state@0.0.4' 1 $ 1 & ! r_state@2' & ! r_state@1' & ! ^ r_state@0.0.4' 1 1
 | ! & $ 1 & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 1 1 obstacle_2 | $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 1 1 $ 1 & ! ^ r_state@2' 1 & ! ^ r_state@1' 0 & ! ^ r_state@0.0.4' 0 1
