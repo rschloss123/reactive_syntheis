@@ -1,6 +1,33 @@
 import json 
 import random 
 
+
+def clean(js):
+	"""Eliminate all terminal nodes and return."""
+
+	while True:
+
+		# accumulate list of terminal nodes and remove them from `js`
+		terminal_nodes = []
+		num_nodes = len(js['nodes'])
+
+
+
+		for key, node in js['nodes'].items():
+			if not node['trans']:
+				terminal_nodes.append(int(key))
+
+		# remove references to terminal nodes
+		for key, node in js['nodes'].items():
+			node['trans'] = [t for t in node['trans'] if t not in terminal_nodes]
+
+		for t in terminal_nodes:
+			del js['nodes'][str(t)]
+
+		
+		if not terminal_nodes:
+			return js
+
 class Controller():
 
 	def __init__(self, name_and_bits, file_name):
@@ -9,8 +36,9 @@ class Controller():
 		# 'open' is a file handle and is being stored as f 
 		with open(file_name, 'r') as f :
 			self.file_content = json.load(f)
+			self.file_content = clean(self.file_content)
 		
-		self.num_nodes = len(self.file_content['nodes'])
+		self.num_nodes = len(self.file_content)
 		self.name_and_bits = name_and_bits
 
 
@@ -85,18 +113,20 @@ def main():
 		{'name': 'obstacle3', 'bits': 1},
 		{'name': 'workload', 'bits': 5},
 		{'name': 'complete_work_at_workstation', 'bits': 1},
+		{'name': 'complete_dropoff_success', 'bits': 1},
+		{'name': 'complete_dropoff_tries', 'bits': 2},
 		{'name': 'r_state', 'bits': 3},
 		{'name': 'workload_add', 'bits': 4},
 		{'name': 'next_state_is_workstation', 'bits': 1},
 		{'name': 'complete_work_with_robot', 'bits': 1},
-		{'name': 'complete_dropoff_success', 'bits': 1},
-		{'name': 'complete_dropoff_tries', 'bits': 2}
+		{'name': 'arriving_at_0', 'bits': 1},
+
 	]
 
 	delivery_file = '/home/rachel/reactive_synthesis/hri_reactive_synthesis/ctrl.json'
 	delivery_sim = Controller(delivery_lookup, delivery_file)
-	node_init = '285'
-	var_list = delivery_sim.simulate(node_init, 3)
+	node_init = '0'
+	var_list = delivery_sim.simulate(node_init, 50)
 
 	
 

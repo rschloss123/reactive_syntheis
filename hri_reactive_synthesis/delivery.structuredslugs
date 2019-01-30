@@ -5,6 +5,8 @@ obstacle_2
 obstacle_3
 workload:0...30
 complete_work_at_workstation
+complete_dropoff_success
+complete_dropoff_tries:0...2
 
 [OUTPUT]
 # robot
@@ -12,8 +14,8 @@ r_state:0...4
 workload_add:0...15
 next_state_is_workstation
 complete_work_with_robot
-complete_dropoff_success
-complete_dropoff_tries:0...3
+arriving_at_0
+
 
 
 [ENV_INIT]
@@ -52,6 +54,19 @@ next_state_is_workstation & workload+workload_add >  30 -> (workload' = 30)
 workload' < workload -> complete_work_at_workstation'
 next_state_is_workstation -> !complete_work_at_workstation'
 
+
+# Limiting the number of tries to drop off completed work
+#complete_work_with_robot & r_state = 0 & complete_dropoff_tries < 2 & !complete_dropoff_success -> complete_dropoff_tries' = (complete_dropoff_tries + 1) & (!#complete_dropoff_success' || complete_dropoff_success') 
+#complete_work_with_robot & r_state = 0 & complete_dropoff_tries = 2 & !complete_dropoff_success -> complete_dropoff_tries' = 0 & (complete_dropoff_success') 
+
+#complete_work_with_robot & r_state = 0 & complete_dropoff_success -> complete_dropoff_tries' = 0 
+
+#arriving_at_0 -> complete_dropoff_tries' = 0 
+#r_state != 0 -> complete_dropoff_tries' = 0 
+#(r_state = 2 || r_state = 3 || r_state = 4) -> !complete_dropoff_success 
+#complete_dropoff_success -> complete_dropoff_tries = 0 
+
+
 [ENV_LIVENESS]
 
 
@@ -67,25 +82,20 @@ r_state = 3 & next_state_is_workstation -> workload_add = 15
 # The robot may or may not continue to give the human work 
 (next_state_is_workstation & (workload_add = 0 || workload_add = 15)) || (!next_state_is_workstation & workload_add = 0)
 
+
+# Tracking when the robot successfully drops off completed work at Inventory
+complete_work_with_robot & r_state = 0 &  complete_dropoff_success -> !complete_work_with_robot'
+complete_work_with_robot & r_state = 0 & !complete_dropoff_success -> complete_work_with_robot'
+
 # Flag for when robot has completed work with it
 next_state_is_workstation & complete_work_at_workstation -> complete_work_with_robot' 
 
 complete_work_with_robot & r_state != 0 -> complete_work_with_robot'
+
 !complete_work_with_robot & !next_state_is_workstation -> !complete_work_with_robot'
 
-# Tracking when the robot successfully drops off completed work at Inventory
-complete_work_with_robot & r_state = 0 & complete_dropoff_success -> !complete_work_with_robot'
-complete_work_with_robot & r_state = 0 & !complete_dropoff_success -> complete_work_with_robot'
-
-# Limiting the number of tries to drop off completed work
-complete_work_with_robot & r_state = 0 & complete_dropoff_tries < 3 & !complete_dropoff_success -> complete_dropoff_tries' = (complete_dropoff_tries + 1) & (complete_dropoff_success || !complete_dropoff_success) 
-complete_work_with_robot & r_state = 0 & complete_dropoff_tries = 3 & !complete_dropoff_success -> complete_dropoff_tries' = 0 & (complete_dropoff_success) 
-
-complete_work_with_robot & r_state = 0 & complete_dropoff_success -> complete_dropoff_tries' = 0 
-
-r_state != 0 & r_state' = 0 -> complete_dropoff_tries' = 0 
-r_state != 0 -> !complete_dropoff_success 
-r_state != 0 -> complete_dropoff_tries = 0 
+r_state != 0 & r_state' = 0 -> arriving_at_0
+!(r_state != 0 & r_state' = 0) -> !arriving_at_0
 
 # Once the robot successfully drops off work, move to state 1
 r_state = 0 &  !complete_dropoff_success -> r_state' = 0
@@ -112,7 +122,7 @@ workload > 0
 [SYS_LIVENESS]
 (r_state = 0) 
 (r_state = 4)
-complete_dropoff_tries = 3 
+
 
 
 
