@@ -63,20 +63,6 @@ arriving_at_0
 | ! complete_dropoff_success & $ 1 & ! complete_dropoff_tries@1' & ! complete_dropoff_tries@0.0.2' 1 ! complete_dropoff_success'
 | ! | | | $ 1 & ! r_state@2 & ! r_state@1 & ! ^ r_state@0.0.4 1 1 $ 1 & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 0 1 $ 1 & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 1 1 $ 1 & ! ^ r_state@2 1 & ! ^ r_state@1 0 & ! ^ r_state@0.0.4 0 1 & $ 1 & ! complete_dropoff_tries@1 & ! complete_dropoff_tries@0.0.2 1 ! complete_dropoff_success
 
-
-
-# Limiting the number of tries to drop off completed work
-#complete_work_with_robot & r_state = 0 & complete_dropoff_tries < 2 & !complete_dropoff_success -> complete_dropoff_tries' = (complete_dropoff_tries + 1) & (!#complete_dropoff_success' || complete_dropoff_success')
-#complete_work_with_robot & r_state = 0 & complete_dropoff_tries = 2 & !complete_dropoff_success -> complete_dropoff_tries' = 0 & (complete_dropoff_success')
-
-#complete_work_with_robot & r_state = 0 & complete_dropoff_success -> complete_dropoff_tries' = 0
-
-#arriving_at_0 -> complete_dropoff_tries' = 0
-#r_state != 0 -> complete_dropoff_tries' = 0
-#(r_state = 2 || r_state = 3 || r_state = 4) -> !complete_dropoff_success
-#complete_dropoff_success -> complete_dropoff_tries = 0
-
-
 ## Variable limits: 0<=workload'<=30
 | ! workload@4' | ! workload@3' | ! workload@2' | ! workload@1' | ! workload@0.0.30' 0
 ## Variable limits: 0<=complete_dropoff_tries'<=2

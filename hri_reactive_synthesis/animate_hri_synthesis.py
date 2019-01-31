@@ -76,6 +76,8 @@ def animate(i):
 
 		print "i", i 
 
+
+
 		states_one_step = var_list[i]
 		patch_h, patch_r, patch_O2, patch_O3 = mapping(states_one_step)
 		return patch_h, patch_r, patch_O2, patch_O3
