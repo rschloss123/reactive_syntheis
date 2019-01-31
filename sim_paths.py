@@ -1,6 +1,6 @@
 import json 
 import random 
-
+import os
 
 def clean(js):
 	"""Eliminate all terminal nodes and return."""
@@ -68,6 +68,7 @@ def variables_to_base10(node, name_and_bits):
 
 
 
+
 class Controller():
 
 	def __init__(self, name_and_bits, file_name):
@@ -123,10 +124,13 @@ class Controller():
 			node_dictionary[str(key)] = dictionary_local
 			transition_dictionary[str(key)] = transition_local
 
-		print node_dictionary
-		print " "
-		print transition_dictionary
-		
+		return (node_dictionary, transition_dictionary)
+
+	def save_dictionary_as_json(self, dictionary, filename):
+		with open(filename, 'w') as f:
+			json.dump(dictionary, f)
+
+
 
 def main(): 
 	
@@ -146,11 +150,20 @@ def main():
 
 	]
 
-	delivery_file = '/home/rachel/reactive_synthesis/hri_reactive_synthesis/ctrl.json'
+	path_location = os.path.dirname(os.path.realpath(__file__))
+	delivery_file = os.path.join(path_location, 'hri_reactive_synthesis', 'ctrl.json')
+	# delivery_file = '/home/rachel/reactive_synthesis/hri_reactive_synthesis/ctrl.json'
 	delivery_sim = Controller(delivery_lookup, delivery_file)
 	node_init = '0'
 	# var_list = delivery_sim.simulate(node_init, 50)
-	delivery_sim.json_to_dictionary()
+	(node_dictionary, transition_dictionary) = delivery_sim.json_to_dictionary()
+
+	node_file = os.path.join(path_location, 'hri_reactive_synthesis', 'node_dictionary.json')
+	transition_file = os.path.join(path_location, 'hri_reactive_synthesis', 'transition_dictionary.json')
+	delivery_sim.save_dictionary_as_json(node_dictionary, node_file)
+	delivery_sim.save_dictionary_as_json(transition_dictionary, transition_file)
+
+
 
 	
 
