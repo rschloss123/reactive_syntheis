@@ -2,6 +2,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib import animation
 from sim_paths import * 
+import os 
 
 fig = plt.figure()
 fig.set_dpi(100)
@@ -59,7 +60,9 @@ dreamer_lookup = [
   {'name': 'r_closed', 'bits': 1}
 ]
 
-dreamer_file = '/home/formal/cyberphysical_systems/hw5/two_player/ctrl.json'
+path_location = os.path.dirname(os.path.realpath(__file__))
+dreamer_file = os.path.join(path_location, 'two_player', 'ctrl.json')
+# dreamer_file = '/home/formal/cyberphysical_systems/hw5/two_player/ctrl.json'
 dreamer_sim = Controller(dreamer_lookup, dreamer_file)
 node_init = '0'
 var_list = dreamer_sim.simulate(node_init, 40)
@@ -76,7 +79,7 @@ plt.grid()
 l = len(var_list)
 
 anim = animation.FuncAnimation(fig, animate, 
-                               init_func=init, 
+                               init_func=init(), 
                                frames=l, 
                                interval=1000,
                                blit=True,

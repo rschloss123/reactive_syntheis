@@ -132,9 +132,9 @@ class Controller():
 
 
 
-def main(): 
-	
-	delivery_lookup = [
+def get_lookup():
+
+	lookup = [
 		{'name': 'wait', 'bits': 1},
 		{'name': 'obstacle2', 'bits': 1},
 		{'name': 'obstacle3', 'bits': 1},
@@ -150,13 +150,22 @@ def main():
 
 	]
 
+	return lookup
+
+
+def main(): 
+	
+
+
 	path_location = os.path.dirname(os.path.realpath(__file__))
 	delivery_file = os.path.join(path_location, 'hri_reactive_synthesis', 'ctrl.json')
-	# delivery_file = '/home/rachel/reactive_synthesis/hri_reactive_synthesis/ctrl.json'
+	
+	delivery_lookup = get_lookup()
+
 	delivery_sim = Controller(delivery_lookup, delivery_file)
 	node_init = '0'
-	# var_list = delivery_sim.simulate(node_init, 50)
-	(node_dictionary, transition_dictionary) = delivery_sim.json_to_dictionary()
+	var_list = delivery_sim.simulate(node_init, 50)
+	# (node_dictionary, transition_dictionary) = delivery_sim.json_to_dictionary()
 
 	node_file = os.path.join(path_location, 'hri_reactive_synthesis', 'node_dictionary.json')
 	transition_file = os.path.join(path_location, 'hri_reactive_synthesis', 'transition_dictionary.json')
