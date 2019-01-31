@@ -169,8 +169,8 @@ def main():
 
 	node_file = os.path.join(path_location, 'hri_reactive_synthesis', 'node_dictionary.json')
 	transition_file = os.path.join(path_location, 'hri_reactive_synthesis', 'transition_dictionary.json')
-	delivery_sim.save_dictionary_as_json(node_dictionary, node_file)
-	delivery_sim.save_dictionary_as_json(transition_dictionary, transition_file)
+	# delivery_sim.save_dictionary_as_json(node_dictionary, node_file)
+	# delivery_sim.save_dictionary_as_json(transition_dictionary, transition_file)
 
 
 

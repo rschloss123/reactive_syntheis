@@ -22,6 +22,7 @@ arriving_at_0
 !wait
 !complete_work_at_workstation 
 workload = 25
+#workload >= 9 && workload <= 25
 
 [SYS_INIT]
 r_state = 1
@@ -62,20 +63,6 @@ r_state = 0 & complete_dropoff_tries < 2 & !complete_dropoff_success -> complete
 
 complete_dropoff_success -> (complete_dropoff_tries' = 0 & !complete_dropoff_success') 
 (r_state = 1 || r_state = 2 || r_state = 3 || r_state = 4) -> (complete_dropoff_tries = 0 & !complete_dropoff_success) 
-
-
-
-# Limiting the number of tries to drop off completed work
-#complete_work_with_robot & r_state = 0 & complete_dropoff_tries < 2 & !complete_dropoff_success -> complete_dropoff_tries' = (complete_dropoff_tries + 1) & (!#complete_dropoff_success' || complete_dropoff_success') 
-#complete_work_with_robot & r_state = 0 & complete_dropoff_tries = 2 & !complete_dropoff_success -> complete_dropoff_tries' = 0 & (complete_dropoff_success') 
-
-#complete_work_with_robot & r_state = 0 & complete_dropoff_success -> complete_dropoff_tries' = 0 
-
-#arriving_at_0 -> complete_dropoff_tries' = 0 
-#r_state != 0 -> complete_dropoff_tries' = 0 
-#(r_state = 2 || r_state = 3 || r_state = 4) -> !complete_dropoff_success 
-#complete_dropoff_success -> complete_dropoff_tries = 0 
-
 
 [ENV_LIVENESS]
 
