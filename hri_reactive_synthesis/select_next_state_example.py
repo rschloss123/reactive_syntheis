@@ -9,16 +9,24 @@ import sim_paths
 
 def check_dictionary_comparisons(nodes_dict, transitions_dict):
 
-	# 1428
-	check =  {'obstacle2': 0, 'workload': 18, 'obstacle3': 0, 'complete_work_with_robot': 1, 'arriving_at_0': 0, 'r_state': 0, 'workload_add': 0, 'complete_work_at_workstation': 1, 'complete_dropoff_tries': 1, 'next_state_is_workstation': 0, 'complete_dropoff_success': 1, 'wait': 0}
 
-	#3199
-	check = {"workload": 20, "obstacle2": 0, "obstacle3": 0, "complete_work_with_robot": 1, "arriving_at_0": 0, "r_state": 3, "workload_add": 0, "complete_work_at_workstation": 1, "complete_dropoff_tries": 0, "next_state_is_workstation": 0, "complete_dropoff_success": 0, "wait": 0}
+	num_nodes = len(nodes_dict)
+	
+	key_options = nodes_dict.keys()
+	
+
+	key_random = str(random.choice(key_options))
+
+
+	check = nodes_dict[key_random]
+
+	print "random key", key_random
 
 	# Testing if we can compare dictionaries
 	for key, node in nodes_dict.items():
+
 		if nodes_dict[key] == check:
-			print "key", key 
+			print "selected key", key 
 			transition_options = transitions_dict[key]
 			print "transition_options", transition_options
 			print "next node", (random.choice(transition_options))
@@ -54,8 +62,8 @@ def main():
 	with open(transition_file, 'r') as f:
 	    transitions_dict = json.load(f)
 
-	# check_dictionary_comparisons(nodes_dict, transitions_dict)
-	test_transitions(nodes_dict, transitions_dict)
+	check_dictionary_comparisons(nodes_dict, transitions_dict)
+	# test_transitions(nodes_dict, transitions_dict)
 
 
 
