@@ -57,6 +57,8 @@ def mapping(states_one_step):
 			patch_h.set_fc('b')
 		else: 
 			patch_h.set_fc('y')
+		workload = states_one_step[3]
+		patch_h.set_radius(.005 * workload)
 		patch_h.center = (3.5, 0.5)
 
 		return patch_h, patch_r, patch_O2, patch_O3

@@ -24,8 +24,10 @@ def check_dictionary_comparisons(nodes_dict, transitions_dict):
 
 	# Testing if we can compare dictionaries
 	for key, node in nodes_dict.items():
-
+		print nodes_dict[key]
+		exit()
 		if nodes_dict[key] == check:
+
 			print "selected key", key 
 			transition_options = transitions_dict[key]
 			print "transition_options", transition_options
@@ -63,7 +65,7 @@ def main():
 	    transitions_dict = json.load(f)
 
 	check_dictionary_comparisons(nodes_dict, transitions_dict)
-	# test_transitions(nodes_dict, transitions_dict)
+	test_transitions(nodes_dict, transitions_dict)
 
 
 
