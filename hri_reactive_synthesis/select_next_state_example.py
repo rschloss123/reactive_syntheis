@@ -2,7 +2,6 @@ import random
 import json
 import os 
 import sys
-import animate_hri_synthesis
 path_location = os.path.dirname(os.path.realpath(__file__))
 sim_paths_location = os.path.join(path_location, '..') 
 sys.path.insert(0, sim_paths_location)
@@ -56,8 +55,8 @@ def main():
 	    transitions_dict = json.load(f)
 
 	# check_dictionary_comparisons(nodes_dict, transitions_dict)
-	# test_transitions(nodes_dict, transitions_dict)
-	simulate_results()
+	test_transitions(nodes_dict, transitions_dict)
+
 
 
 if __name__ == '__main__':
