@@ -22,7 +22,7 @@ arriving_at_0
 !wait
 !complete_work_at_workstation 
 workload = 25
-#workload >= 9 && workload <= 25
+#workload >= 9 && workload <= 26
 
 [SYS_INIT]
 r_state = 1
