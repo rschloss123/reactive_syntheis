@@ -78,7 +78,7 @@ class Controller():
 		with open(file_name, 'r') as f :
 			self.file_content = json.load(f)
 			self.file_content = clean(self.file_content)
-		
+
 		self.num_nodes = len(self.file_content['nodes'])
 		self.name_and_bits = name_and_bits
 

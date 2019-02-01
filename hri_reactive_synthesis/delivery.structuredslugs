@@ -75,6 +75,7 @@ complete_dropoff_success -> (complete_dropoff_tries' = 0 & !complete_dropoff_suc
 
 # Transferring work to human
 # There will always be a transfer when the robot arrives at workstation 
+# Also have tried workload_add = 8
 r_state = 3 & next_state_is_workstation -> workload_add = 15
 # The robot may or may not continue to give the human work 
 (next_state_is_workstation & (workload_add = 0 || workload_add = 15)) || (!next_state_is_workstation & workload_add = 0)
