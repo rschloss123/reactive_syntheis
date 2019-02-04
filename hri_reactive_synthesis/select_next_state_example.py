@@ -18,19 +18,14 @@ def check_dictionary_comparisons(nodes_dict, transitions_dict):
 	key_random = str(random.choice(key_options))
 
 
-	# key_random = '80'
-	# key_random = '627'
-	# selected key 6239
-
 	check = nodes_dict[key_random]
-
-	# check = {'workload': 23, 'obstacle2': 0, 'obstacle3': 1, 'workload_stays_constant': 1, 'complete_work_with_robot': 0, 'arriving_at_0': 0, 'r_state': 2, 'workload_add': 0, 'complete_work_at_workstation': 1, 'complete_dropoff_tries': 0, 'next_state_is_workstation': 0, 'complete_dropoff_success': 0, 'wait': 0}
 
 	print "random key", key_random
 
-	# Testing if we ca1n compare dictionaries
+	# Testing if we can compare dictionaries
 	for key, node in nodes_dict.items():
-
+		print nodes_dict[key]
+		exit()
 		if nodes_dict[key] == check:
 
 			print "selected key", key 
@@ -39,7 +34,7 @@ def check_dictionary_comparisons(nodes_dict, transitions_dict):
 			print "next node", (random.choice(transition_options))
 			
 
-			return
+	return
 
 def test_transitions(nodes_dict, transitions_dict):
 
@@ -70,7 +65,7 @@ def main():
 	    transitions_dict = json.load(f)
 
 	check_dictionary_comparisons(nodes_dict, transitions_dict)
-	# test_transitions(nodes_dict, transitions_dict)
+	test_transitions(nodes_dict, transitions_dict)
 
 
 
