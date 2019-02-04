@@ -7,6 +7,7 @@ workload:0...30
 complete_work_at_workstation
 complete_dropoff_success
 complete_dropoff_tries:0...2
+workload_stays_constant
 
 [OUTPUT]
 # robot
@@ -23,6 +24,7 @@ arriving_at_0
 !complete_work_at_workstation 
 workload = 25
 #workload >= 9 && workload <= 26
+!workload_stays_constant
 
 [SYS_INIT]
 r_state = 1
@@ -49,7 +51,12 @@ next_state_is_workstation & workload+workload_add <= 30 -> (workload' = workload
 next_state_is_workstation & workload+workload_add >  30 -> (workload' = 30)
 
 # Workload Decrease
-(!next_state_is_workstation & !wait) -> ( (workload'+1 = workload) ||  (workload'+2 = workload))
+(!next_state_is_workstation & !wait) & !workload_stays_constant -> ( (workload'+1 = workload) ||  (workload'+2 = workload) || (workload' = workload) )
+(!next_state_is_workstation & !wait) & workload_stays_constant -> ( (workload'+1 = workload) ||  (workload'+2 = workload) )
+
+(workload' = workload) -> workload_stays_constant'
+(workload' != workload) -> !workload_stays_constant'
+
 
 # Flagging when there is complete work for the robot to pick up
 workload' < workload -> complete_work_at_workstation'

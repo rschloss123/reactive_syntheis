@@ -12,6 +12,7 @@ complete_work_at_workstation
 complete_dropoff_success
 complete_dropoff_tries@0.0.2
 complete_dropoff_tries@1
+workload_stays_constant
 
 
 [OUTPUT]
@@ -48,7 +49,12 @@ arriving_at_0
 | ! & next_state_is_workstation $ 11 ^ workload_add@0.0.15 workload@0.0.30 & workload_add@0.0.15 workload@0.0.30 ^ ^ workload_add@1 workload@1 ? 1 | | & workload_add@1 workload@1 & ? 1 workload_add@1 & ? 1 workload@1 ^ ^ workload_add@2 workload@2 ? 3 | | & workload_add@2 workload@2 & ? 3 workload_add@2 & ? 3 workload@2 ^ ^ workload_add@3 workload@3 ? 5 | | & workload_add@3 workload@3 & ? 5 workload_add@3 & ? 5 workload@3 ^ workload@4 ? 7 & workload@4 ? 7 | ? 9 | & ? 8 ! 1 & | ! 1 ? 8 | & ? 6 ! 1 & | ! 1 ? 6 | & ? 4 ! 1 & | ! 1 ? 4 | & ? 2 ! 1 & | ! 1 ? 2 | & ? 0 ! 0 & | ! 0 ? 0 0 $ 1 & ! ^ workload@4' 1 & ! ^ workload@3' 1 & ! ^ workload@2' 1 & ! ^ workload@1' 1 & ! ^ workload@0.0.30' 0 1
 
 # Workload Decrease
-| ! & ! next_state_is_workstation ! wait | $ 11 ^ 1 workload@0.0.30' & 1 workload@0.0.30' ^ workload@1' ? 1 & workload@1' ? 1 ^ workload@2' ? 3 & workload@2' ? 3 ^ workload@3' ? 5 & workload@3' ? 5 ^ workload@4' ? 7 & workload@4' ? 7 & ! ? 9 & ! ^ ? 8 workload@4 & ! ^ ? 6 workload@3 & ! ^ ? 4 workload@2 & ! ^ ? 2 workload@1 & ! ^ ? 0 workload@0.0.30 1 $ 11 ^ 0 workload@0.0.30' & 0 workload@0.0.30' ^ ^ 1 workload@1' ? 1 | | & 1 workload@1' & ? 1 1 & ? 1 workload@1' ^ workload@2' ? 3 & workload@2' ? 3 ^ workload@3' ? 5 & workload@3' ? 5 ^ workload@4' ? 7 & workload@4' ? 7 & ! ? 9 & ! ^ ? 8 workload@4 & ! ^ ? 6 workload@3 & ! ^ ? 4 workload@2 & ! ^ ? 2 workload@1 & ! ^ ? 0 workload@0.0.30 1
+| ! & & ! next_state_is_workstation ! wait ! workload_stays_constant | | $ 11 ^ 1 workload@0.0.30' & 1 workload@0.0.30' ^ workload@1' ? 1 & workload@1' ? 1 ^ workload@2' ? 3 & workload@2' ? 3 ^ workload@3' ? 5 & workload@3' ? 5 ^ workload@4' ? 7 & workload@4' ? 7 & ! ? 9 & ! ^ ? 8 workload@4 & ! ^ ? 6 workload@3 & ! ^ ? 4 workload@2 & ! ^ ? 2 workload@1 & ! ^ ? 0 workload@0.0.30 1 $ 11 ^ 0 workload@0.0.30' & 0 workload@0.0.30' ^ ^ 1 workload@1' ? 1 | | & 1 workload@1' & ? 1 1 & ? 1 workload@1' ^ workload@2' ? 3 & workload@2' ? 3 ^ workload@3' ? 5 & workload@3' ? 5 ^ workload@4' ? 7 & workload@4' ? 7 & ! ? 9 & ! ^ ? 8 workload@4 & ! ^ ? 6 workload@3 & ! ^ ? 4 workload@2 & ! ^ ? 2 workload@1 & ! ^ ? 0 workload@0.0.30 1 $ 1 & ! ^ workload@4' workload@4 & ! ^ workload@3' workload@3 & ! ^ workload@2' workload@2 & ! ^ workload@1' workload@1 & ! ^ workload@0.0.30' workload@0.0.30 1
+| ! & & ! next_state_is_workstation ! wait workload_stays_constant | $ 11 ^ 1 workload@0.0.30' & 1 workload@0.0.30' ^ workload@1' ? 1 & workload@1' ? 1 ^ workload@2' ? 3 & workload@2' ? 3 ^ workload@3' ? 5 & workload@3' ? 5 ^ workload@4' ? 7 & workload@4' ? 7 & ! ? 9 & ! ^ ? 8 workload@4 & ! ^ ? 6 workload@3 & ! ^ ? 4 workload@2 & ! ^ ? 2 workload@1 & ! ^ ? 0 workload@0.0.30 1 $ 11 ^ 0 workload@0.0.30' & 0 workload@0.0.30' ^ ^ 1 workload@1' ? 1 | | & 1 workload@1' & ? 1 1 & ? 1 workload@1' ^ workload@2' ? 3 & workload@2' ? 3 ^ workload@3' ? 5 & workload@3' ? 5 ^ workload@4' ? 7 & workload@4' ? 7 & ! ? 9 & ! ^ ? 8 workload@4 & ! ^ ? 6 workload@3 & ! ^ ? 4 workload@2 & ! ^ ? 2 workload@1 & ! ^ ? 0 workload@0.0.30 1
+
+| ! $ 1 & ! ^ workload@4' workload@4 & ! ^ workload@3' workload@3 & ! ^ workload@2' workload@2 & ! ^ workload@1' workload@1 & ! ^ workload@0.0.30' workload@0.0.30 1 workload_stays_constant'
+| ! $ 1 ! & ! ^ workload@4' workload@4 & ! ^ workload@3' workload@3 & ! ^ workload@2' workload@2 & ! ^ workload@1' workload@1 & ! ^ workload@0.0.30' workload@0.0.30 1 ! workload_stays_constant'
+
 
 # Flagging when there is complete work for the robot to pick up
 | ! $ 1 | & ! workload@4' workload@4 & | workload@4 ! workload@4' | & ! workload@3' workload@3 & | workload@3 ! workload@3' | & ! workload@2' workload@2 & | workload@2 ! workload@2' | & ! workload@1' workload@1 & | workload@1 ! workload@1' | & ! workload@0.0.30' workload@0.0.30 & | workload@0.0.30 ! workload@0.0.30' 0 complete_work_at_workstation'
@@ -71,8 +77,9 @@ arriving_at_0
 [ENV_INIT]
 ! wait
 ! complete_work_at_workstation
-$ 1 & ! ^ workload@4 1 & ! ^ workload@3 1 & ! ^ workload@2 0 & ! ^ workload@1 1 & ! ^ workload@0.0.30 0 1
-#workload >= 9 && workload <= 25
+$ 1 & ! ^ workload@4 1 & ! ^ workload@3 1 & ! ^ workload@2 0 & ! ^ workload@1 0 & ! ^ workload@0.0.30 1 1
+#workload >= 9 && workload <= 26
+! workload_stays_constant
 
 ## Variable limits: 0<=workload<=30
 | ! workload@4 | ! workload@3 | ! workload@2 | ! workload@1 | ! workload@0.0.30 0
