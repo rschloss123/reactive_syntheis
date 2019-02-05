@@ -55,100 +55,6 @@ def test_transitions(nodes_dict, transitions_dict):
 	return 
 
 
-def test_deviations(nodes_dict, transitions_dict):
-
-	random_binary = [0,1]
-	random_2 = [1,2]
-	random_3 = [0,1,2]
-
-	obstacle_dict = {2: 'obstacle2', 3: 'obstacle3'}
-
-	test_steps = 20
-	node_num = '0'
-
-	current_state = nodes_dict[node_num]
-
-
-	for i in range(0, test_steps):
-
-		print "test num", i , "\n"
-
-		print "current_state", current_state, "\n"
-
-		# transition options from where I am currenlty
-		transition_options = transitions_dict[node_num]
-
-		print "transition options", transition_options, "\n"
-		
-		# update node_num to where robot is expected to go
-		node_num = random.choice(transition_options)
-
-		print "node num", node_num, "\n"
-
-		# next expected states
-		next_expected = nodes_dict[str(node_num)]
-
-		print "next_expected", next_expected, "\n"
-
-		# initialize next actual states, which will be updated
-		next_actual = {}
-		for key, val in next_expected.items():
-			next_actual[key] = val 
-
-		# update actual state randomly 
-
-		# workload state and 'workload_stays_constant'
-		if next_expected['r_state'] != 4: 
-			if current_state['workload_stays_constant']:
-				next_actual['workload'] = current_state['workload'] - random.choice(random_2)
-				next_actual['workload_stays_constant'] = 0
-			else: 
-				next_actual['workload'] = current_state['workload'] - random.choice(random_3)
-				if next_actual['workload'] == current_state['workload']: 
-					next_actual['workload_stays_constant'] = 1
-				else: 
-					next_actual['workload_stays_constant'] = 0
-		else:
-			# workload, workload add, and workload_stays_constant are already configured by dictionary if the robot is in state 4 
-			continue 
-
-
-
-
-		# waiting state
-		if next_actual['workload'] > 0 or next_actual['r_state'] == 4:
-			next_actual['wait'] = 0 
-		else: 
-			next_actual['wait'] = 1
-
-		# obstacles
-		for pos_o, obstacle in obstacle_dict.items(): 
-
-			if next_actual['r_state'] == pos_o:
-					next_actual[obstacle] = 0 
-			else: 
-				if current_state[obstacle] == 0:
-					next_actual[obstacle] = random.choice(random_binary)
-				else: 
-					next_actual[obstacle] = 0
-
-		print "next_actual", next_actual
-		
-
-
-		# update where we actual are
-		for key, node in nodes_dict.items():
-
-			if nodes_dict[key] == next_actual:
-
-
-				print "selected key", key 
-				print "dictionary_check", nodes_dict[key]
-				node_num = key
-			
-	exit()
-
-	return 
 
 
 
@@ -171,3 +77,105 @@ def main():
 if __name__ == '__main__':
 	main()
 	
+
+
+
+# def test_deviations(nodes_dict, transitions_dict):
+
+# 	random_binary = [0,1]
+# 	random_2 = [1,2]
+# 	random_3 = [0,1,2]
+
+# 	obstacle_dict = {2: 'obstacle2', 3: 'obstacle3'}
+
+# 	test_steps = 100
+# 	node_num = '0'
+
+# 	current_state = nodes_dict[node_num]
+
+
+# 	for i in range(0, test_steps):
+
+# 		print "test num", i , "\n"
+
+# 		print "current_state", current_state, "\n"
+
+# 		# transition options from where I am currenlty
+# 		transition_options = transitions_dict[node_num]
+
+# 		print "transition options", transition_options, "\n"
+		
+# 		# update node_num to where robot is expected to go
+# 		node_num = random.choice(transition_options)
+
+# 		print "node num", node_num, "\n"
+
+# 		# next expected states
+# 		next_expected = nodes_dict[str(node_num)]
+
+# 		print "next_expected", next_expected, "\n"
+
+# 		# initialize next actual states, which will be updated
+# 		next_actual = {}
+# 		for key, val in next_expected.items():
+# 			next_actual[key] = val 
+
+# 		# update actual state randomly 
+
+# 		# workload state and 'workload_stays_constant'
+# 		if next_expected['r_state'] != 4: 
+# 			if current_state['workload_stays_constant']:
+# 				next_actual['workload'] = current_state['workload'] - random.choice(random_2)
+# 				next_actual['workload_stays_constant'] = 0
+# 			else: 
+# 				next_actual['workload'] = current_state['workload'] - random.choice(random_3)
+# 				if next_actual['workload'] == current_state['workload']: 
+# 					next_actual['workload_stays_constant'] = 1
+# 				else: 
+# 					next_actual['workload_stays_constant'] = 0
+# 		else:
+# 			# workload, workload add, and workload_stays_constant are already configured by dictionary if the robot is in state 4 
+# 			continue 
+
+
+
+
+# 		# waiting state
+# 		if next_actual['workload'] > 0 or next_actual['r_state'] == 4:
+# 			next_actual['wait'] = 0 
+# 		else: 
+# 			next_actual['wait'] = 1
+
+# 		# obstacles
+# 		for pos_o, obstacle in obstacle_dict.items(): 
+
+# 			if next_actual['r_state'] == pos_o:
+# 					next_actual[obstacle] = 0 
+# 			else: 
+# 				if current_state[obstacle] == 0:
+# 					next_actual[obstacle] = random.choice(random_binary)
+# 				else: 
+# 					next_actual[obstacle] = 0
+
+# 		print "next_actual", next_actual
+		
+# 		success = False 
+
+# 		# update where we actual are
+# 		for key, node in nodes_dict.items():
+
+# 			if nodes_dict[key] == next_actual:
+
+
+# 				print "selected key", key 
+				
+# 				node_num = key
+				
+# 				success = True
+				 
+# 		if success == False:
+# 			"unsuccessful"
+# 			exit()
+# 	exit()
+
+# 	return 
