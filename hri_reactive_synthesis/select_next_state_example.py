@@ -66,7 +66,8 @@ def test_commands(nodes_dict, transitions_dict):
 	test_steps = 1
 
 	key_options = nodes_dict.keys()
-	node_num = str(random.choice(key_options)) #'2142' # '6464'
+	node_num =  str(random.choice(key_options)) #'2142' # '6464' #'11476' '11136' '8730' 
+	# good example: '22'
 
 	print "node_num", node_num
 
