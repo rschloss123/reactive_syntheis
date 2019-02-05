@@ -66,7 +66,7 @@ def test_commands(nodes_dict, transitions_dict):
 	test_steps = 1
 
 	key_options = nodes_dict.keys()
-	node_num = str(random.choice(key_options))
+	node_num = str(random.choice(key_options)) #'2142' # '6464'
 
 	print "node_num", node_num
 
@@ -108,7 +108,7 @@ def test_commands(nodes_dict, transitions_dict):
 			robot_commands[c] = nodes_dict[node_num][c]
 
 
-		print robot_commands
+		print "robot_commands", robot_commands
 		exit()
 
 		
