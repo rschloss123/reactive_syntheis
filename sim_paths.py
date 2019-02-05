@@ -83,6 +83,7 @@ class Controller():
 		self.name_and_bits = name_and_bits
 
 
+
 	def simulate(self, node_init, num_steps):
 
 		node_num = node_init

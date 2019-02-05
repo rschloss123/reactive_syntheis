@@ -22,8 +22,8 @@ arriving_at_0
 [ENV_INIT]
 !wait
 !complete_work_at_workstation 
-workload = 25
-#workload >= 9 && workload <= 26
+#workload = 25
+workload >= 9 && workload <= 26
 !workload_stays_constant
 
 [SYS_INIT]

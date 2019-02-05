@@ -20,8 +20,8 @@ def check_dictionary_comparisons(nodes_dict, transitions_dict):
 
 	check = nodes_dict[key_random]
 
-	check = {'workload':15, 'obstacle2': 0, 'obstacle3': 0, 'workload_stays_constant': 1, 'complete_work_with_robot': 0, 'arriving_at_0': 0, 'r_state': 2, 'workload_add': 0, 'complete_work_at_workstation': 1, 'complete_dropoff_tries': 0, 'next_state_is_workstation': 0, 'complete_dropoff_success': 0, 'wait': 0}
-	# print "random key", key_random
+	# check = {'workload':15, 'obstacle2': 0, 'obstacle3': 0, 'workload_stays_constant': 1, 'complete_work_with_robot': 0, 'arriving_at_0': 0, 'r_state': 2, 'workload_add': 0, 'complete_work_at_workstation': 1, 'complete_dropoff_tries': 0, 'next_state_is_workstation': 0, 'complete_dropoff_success': 0, 'wait': 0}
+	print "random key", key_random
 
 	# Testing if we can compare dictionaries
 	for key, node in nodes_dict.items():

@@ -77,8 +77,8 @@ arriving_at_0
 [ENV_INIT]
 ! wait
 ! complete_work_at_workstation
-$ 1 & ! ^ workload@4 1 & ! ^ workload@3 1 & ! ^ workload@2 0 & ! ^ workload@1 0 & ! ^ workload@0.0.30 1 1
-#workload >= 9 && workload <= 26
+#workload = 25
+& $ 1 | workload@4 | & workload@3 ! 1 & | ! 1 workload@3 | & workload@2 ! 0 & | ! 0 workload@2 | & workload@1 ! 0 & | ! 0 workload@1 | & workload@0.0.30 ! 1 & | ! 1 workload@0.0.30 1 $ 1 | & ! workload@4 1 & | 1 ! workload@4 | & ! workload@3 1 & | 1 ! workload@3 | & ! workload@2 0 & | 0 ! workload@2 | & ! workload@1 1 & | 1 ! workload@1 | & ! workload@0.0.30 0 & | 0 ! workload@0.0.30 1
 ! workload_stays_constant
 
 ## Variable limits: 0<=workload<=30
