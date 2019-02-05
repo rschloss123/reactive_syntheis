@@ -140,7 +140,8 @@ $ 1 | & ! workload@4 1 & | 1 ! workload@4 | & ! workload@3 1 & | 1 ! workload@3 
 | ! r_state@2' & ! r_state@1' | ! r_state@0.0.4' 0
 
 [SYS_INIT]
-$ 1 & ! r_state@2 & ! r_state@1 & ! ^ r_state@0.0.4 1 1
+#r_state = 1
+| | | $ 1 & ! r_state@2 & ! r_state@1 & ! ^ r_state@0.0.4 1 1 $ 1 & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 0 1 $ 1 & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 1 1 $ 1 & ! ^ r_state@2 1 & ! ^ r_state@1 0 & ! ^ r_state@0.0.4 0 1
 ! next_state_is_workstation
 ! complete_work_with_robot
 $ 1 & ! workload_add@3 & ! workload_add@2 & ! workload_add@1 & ! workload_add@0.0.15 1

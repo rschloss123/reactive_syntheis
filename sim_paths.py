@@ -13,13 +13,19 @@ def clean(js):
 
 
 
+		print "here 1"
+
 		for key, node in js['nodes'].items():
 			if not node['trans']:
 				terminal_nodes.append(int(key))
 
+		print "here 2"
+
 		# remove references to terminal nodes
 		for key, node in js['nodes'].items():
 			node['trans'] = [t for t in node['trans'] if t not in terminal_nodes]
+
+		print "here 3"
 
 		for t in terminal_nodes:
 			del js['nodes'][str(t)]
