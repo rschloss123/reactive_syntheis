@@ -94,6 +94,7 @@ def test_commands(nodes_dict, transitions_dict):
 
 
 		for node_options in transition_options:
+			print "robot state",  nodes_dict[node_options]['r_state']
 			for key in environment: 
 				print key, nodes_dict[node_options][key]
 			if all(nodes_dict[node_options][key] == environment_states[key] for key in environment):

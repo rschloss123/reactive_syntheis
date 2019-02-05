@@ -61,6 +61,7 @@ next_state_is_workstation & workload+workload_add >  30 -> (workload' = 30)
 
 # Flagging when there is complete work for the robot to pick up
 workload' < workload -> complete_work_at_workstation'
+complete_work_at_workstation & !next_state_is_workstation  -> complete_work_at_workstation'
 next_state_is_workstation -> !complete_work_at_workstation'
 
 complete_work_with_robot & r_state = 0 & !complete_dropoff_success -> (complete_dropoff_success' || !complete_dropoff_success') 
