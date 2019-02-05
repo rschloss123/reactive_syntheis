@@ -41,7 +41,11 @@ def check_dictionary_comparisons(nodes_dict, transitions_dict):
 def test_transitions(nodes_dict, transitions_dict):
 
 	test_steps = 5
-	key = '0'
+
+	key_options = nodes_dict.keys()
+	
+
+	key = str(random.choice(key_options))
 
 	for i in range(0, test_steps):
 		print "key", key
@@ -56,6 +60,62 @@ def test_transitions(nodes_dict, transitions_dict):
 
 
 
+def test_commands(nodes_dict, transitions_dict):
+
+
+	test_steps = 1
+
+	key_options = nodes_dict.keys()
+	node_num = str(random.choice(key_options))
+
+	print "node_num", node_num
+
+	commands = ['r_state', 'workload_add', 'next_state_is_workstation', 'complete_work_with_robot', 'arriving_at_0']
+	environment = ['wait', 'obstacle2', 'obstacle3', 'workload', 'complete_work_at_workstation', 'complete_dropoff_success', 'complete_dropoff_tries', 'workload_stays_constant']
+
+
+	for i in range(0, test_steps):
+
+
+		for key, val in nodes_dict[node_num].items():
+			print key, val 
+
+		transition_options = [str(i) for i in transitions_dict[node_num]]
+		print "transition options", transition_options, "\n"
+
+
+		node_num = (random.choice(transition_options))
+		next_states = nodes_dict[node_num]
+
+		environment_states = {}
+
+		for states in environment:
+			environment_states[states] = next_states[states]
+
+
+		for node_options in transition_options:
+			for key in environment: 
+				print key, nodes_dict[node_options][key]
+			if all(nodes_dict[node_options][key] == environment_states[key] for key in environment):
+				node_num = node_options
+				print "SELECTED OPTION", node_num
+			print "\n"
+
+
+		robot_commands = {}
+		for c in commands:
+			robot_commands[c] = nodes_dict[node_num][c]
+
+
+		print robot_commands
+		exit()
+
+		
+
+
+		
+		# update node_num to where robot is expected to go
+		node_num = random.choice(transition_options)	
 
 
 def main():
@@ -71,7 +131,8 @@ def main():
 
 	# check_dictionary_comparisons(nodes_dict, transitions_dict)
 	# test_transitions(nodes_dict, transitions_dict)
-	test_deviations(nodes_dict, transitions_dict)
+	# test_deviations(nodes_dict, transitions_dict)
+	test_commands(nodes_dict, transitions_dict)
 
 
 if __name__ == '__main__':
