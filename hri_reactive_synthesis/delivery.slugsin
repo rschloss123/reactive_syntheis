@@ -38,8 +38,8 @@ arriving_at_0
 # Obstacle will not intentionally interfere with the robot
 | ! $ 1 & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 0 1 ! obstacle_2
 | ! $ 1 & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 1 1 ! obstacle_3
-| ! $ 1 ! & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 1 1 | ! obstacle_3 obstacle_3
-| ! $ 1 ! & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 0 1 | ! obstacle_2 obstacle_2
+#r_state = 3 -> (!obstacle_3' || obstacle_3')
+#r_state = 2 -> (!obstacle_2' || obstacle_2')
 
 # Waiting behavior
 | ! & $ 1 & ! workload@4 & ! workload@3 & ! workload@2 & ! workload@1 & ! workload@0.0.30 1 $ 1 ! & ! ^ r_state@2 1 & ! ^ r_state@1 0 & ! ^ r_state@0.0.4 0 1 wait
@@ -79,10 +79,10 @@ arriving_at_0
 
 [ENV_INIT]
 ! wait
-! complete_work_at_workstation
+#!complete_work_at_workstation
 #workload = 25
 & $ 1 | workload@4 | & workload@3 ! 1 & | ! 1 workload@3 | & workload@2 ! 0 & | ! 0 workload@2 | & workload@1 ! 0 & | ! 0 workload@1 | & workload@0.0.30 ! 1 & | ! 1 workload@0.0.30 1 $ 1 | & ! workload@4 1 & | 1 ! workload@4 | & ! workload@3 1 & | 1 ! workload@3 | & ! workload@2 0 & | 0 ! workload@2 | & ! workload@1 1 & | 1 ! workload@1 | & ! workload@0.0.30 0 & | 0 ! workload@0.0.30 1
-! workload_stays_constant
+#!workload_stays_constant
 
 ## Variable limits: 0<=workload<=30
 | ! workload@4 | ! workload@3 | ! workload@2 | ! workload@1 | ! workload@0.0.30 0
@@ -144,10 +144,10 @@ $ 1 | & ! workload@4 1 & | 1 ! workload@4 | & ! workload@3 1 & | 1 ! workload@3 
 
 [SYS_INIT]
 #r_state = 1
-| | | $ 1 & ! r_state@2 & ! r_state@1 & ! ^ r_state@0.0.4 1 1 $ 1 & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 0 1 $ 1 & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 1 1 $ 1 & ! ^ r_state@2 1 & ! ^ r_state@1 0 & ! ^ r_state@0.0.4 0 1
-! next_state_is_workstation
-! complete_work_with_robot
-$ 1 & ! workload_add@3 & ! workload_add@2 & ! workload_add@1 & ! workload_add@0.0.15 1
+| | | $ 1 & ! r_state@2 & ! r_state@1 & ! ^ r_state@0.0.4 1 1 & $ 1 & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 0 1 | obstacle_3 ! obstacle_3 & $ 1 & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 1 1 | obstacle_2 ! obstacle_2 $ 1 & ! ^ r_state@2 1 & ! ^ r_state@1 0 & ! ^ r_state@0.0.4 0 1
+#!next_state_is_workstation
+#!complete_work_with_robot
+#workload_add = 0
 
 
 ## Variable limits: 0<=r_state<=4

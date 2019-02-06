@@ -21,17 +21,17 @@ arriving_at_0
 
 [ENV_INIT]
 !wait
-!complete_work_at_workstation 
+#!complete_work_at_workstation 
 #workload = 25
 workload >= 9 && workload <= 26
-!workload_stays_constant
+#!workload_stays_constant
 
 [SYS_INIT]
 #r_state = 1
-r_state = 1 || r_state = 2 || r_state = 3 || r_state = 4
-!next_state_is_workstation
-!complete_work_with_robot
-workload_add = 0
+r_state = 1 || (r_state = 2 & (obstacle_3  || !obstacle_3 )) || (r_state = 3 & (obstacle_2  || !obstacle_2 )) || r_state = 4
+#!next_state_is_workstation
+#!complete_work_with_robot
+#workload_add = 0
 
 
 [ENV_TRANS]
@@ -41,8 +41,8 @@ obstacle_3 -> !obstacle_3'
 # Obstacle will not intentionally interfere with the robot
 r_state = 2 -> !obstacle_2
 r_state = 3 -> !obstacle_3
-r_state != 3 -> (!obstacle_3 || obstacle_3) 
-r_state != 2 -> (!obstacle_2 || obstacle_2) 
+#r_state = 3 -> (!obstacle_3' || obstacle_3') 
+#r_state = 2 -> (!obstacle_2' || obstacle_2') 
 
 # Waiting behavior
 workload = 0 & r_state != 4 -> wait
