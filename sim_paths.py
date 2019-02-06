@@ -142,10 +142,26 @@ class Controller():
 
 def get_lookup():
 
+	# lookup = [
+	# 	{'name': 'wait', 'bits': 1},
+	# 	{'name': 'obstacle2', 'bits': 1},
+	# 	{'name': 'obstacle3', 'bits': 1},
+	# 	{'name': 'workload', 'bits': 5},
+	# 	{'name': 'complete_work_at_workstation', 'bits': 1},
+	# 	{'name': 'complete_dropoff_success', 'bits': 1},
+	# 	{'name': 'complete_dropoff_tries', 'bits': 2},
+	# 	{'name': 'workload_stays_constant', 'bits': 1},
+	# 	{'name': 'r_state', 'bits': 3},
+	# 	{'name': 'workload_add', 'bits': 4},
+	# 	{'name': 'next_state_is_workstation', 'bits': 1},
+	# 	{'name': 'complete_work_with_robot', 'bits': 1},
+	# 	{'name': 'arriving_at_0', 'bits': 1},
+
+	# ]
+
 	lookup = [
 		{'name': 'wait', 'bits': 1},
 		{'name': 'obstacle2', 'bits': 1},
-		{'name': 'obstacle3', 'bits': 1},
 		{'name': 'workload', 'bits': 5},
 		{'name': 'complete_work_at_workstation', 'bits': 1},
 		{'name': 'complete_dropoff_success', 'bits': 1},

@@ -68,22 +68,23 @@ def test_transitions(nodes_dict, transitions_dict):
 def test_commands(nodes_dict, transitions_dict):
 
 
-	test_steps = 10
+	test_steps = 500
 
 	key_options = nodes_dict.keys()
 	node_num = str(random.choice(key_options)) #'15230'  
 
 
-	print "node_num", node_num
-
 	commands = ['r_state', 'workload_add', 'next_state_is_workstation', 'complete_work_with_robot', 'arriving_at_0']
-	environment = ['wait', 'obstacle2', 'obstacle3', 'workload', 'complete_work_at_workstation', 'complete_dropoff_success', 'complete_dropoff_tries', 'workload_stays_constant']
+	# environment = ['wait', 'obstacle2', 'obstacle3', 'workload', 'complete_work_at_workstation', 'complete_dropoff_success', 'complete_dropoff_tries', 'workload_stays_constant']
+	environment = ['wait', 'obstacle2', 'workload', 'complete_work_at_workstation', 'complete_dropoff_success', 'complete_dropoff_tries', 'workload_stays_constant']
+
 
 
 	for i in range(0, test_steps):
 
 		current_node_states = nodes_dict[node_num]
 		print "current state"
+		print "node_num", node_num
 		for key, val in nodes_dict[node_num].items():
 			print key, val 
 
@@ -107,16 +108,21 @@ def test_commands(nodes_dict, transitions_dict):
 
 
 		# testing if we don't get a match
-		if (current_node_states['obstacle2'] == 0 and current_node_states['obstacle3'] == 0) and all(nodes_dict[node]['obstacle2']== 0 and nodes_dict[node]['obstacle3'] == 0  for node in transition_options):
+		# if (current_node_states['obstacle2'] == 0 and current_node_states['obstacle3'] == 0) and all(nodes_dict[node]['obstacle2']== 0 and nodes_dict[node]['obstacle3'] == 0  for node in transition_options):
+		
+
+		if (current_node_states['obstacle2'] == 0) and all(nodes_dict[node]['obstacle2']== 0 for node in transition_options):
 			r = random.choice([0, 1])
-			if all(nodes_dict[key]['r_state'] == 2 for key in transition_options):
-			 	environment_states['obstacle3'] = r
-			 	next_states['obstacle3'] = r
+			# if all(nodes_dict[key]['r_state'] == 2 for key in transition_options):
+			#  	environment_states['obstacle3'] = r
+			#  	next_states['obstacle3'] = r
 			if all(nodes_dict[key]['r_state'] == 3 for key in transition_options):
 			 	environment_states['obstacle2'] = r
 			 	next_states['obstacle2'] = r
 
-			print "TEST"
+			# print "TEST"
+			# print node_num
+			# exit()
 			
 
 		print "next_states"
@@ -128,13 +134,17 @@ def test_commands(nodes_dict, transitions_dict):
 		while success == False: 
 
 			for node_options in transition_options:
-				# for key in environment: 
-					# print key, nodes_dict[node_options][key]
+				print "node", node_options 
+				print "r_state", nodes_dict[node_options]['r_state']
+					
+				for key in environment:
+					
+					print key, nodes_dict[node_options][key]
 				if all(nodes_dict[node_options][key] == environment_states[key] for key in environment):
 					node_num = node_options
 					print "SELECTED OPTION", node_num
 					success = True 
-				# print "\n"
+				print "\n"
 
 			match = False  
 			if success == False: 
@@ -144,23 +154,8 @@ def test_commands(nodes_dict, transitions_dict):
 												
 						print "selected key", key 
 
-						# for key_check, val in nodes_dict[key].items():
-						# 	print key_check, val 
-
 						node_num = key 
-						# transition_options = [str(i) for i in transitions_dict[key]]
-						# print "transition_options", transition_options
-				
 
-						# node_num = (random.choice(transition_options))
-
-						# next_states = {}
-						# for key, val in nodes_dict[node_num].items():
-						# 	next_states[key] = val
-
-						# environment_states = {}
-						# for states in environment:
-						# 	environment_states[states] = next_states[states]
 
 						success = True 
 
