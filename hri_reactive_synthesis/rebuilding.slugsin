@@ -1,0 +1,76 @@
+[INPUT]
+#wait
+obstacle_2
+obstacle_3
+#workload:0...15
+#complete_work_at_workstation
+#complete_dropoff_success
+#complete_dropoff_tries:0...2
+#workload_stays_constant
+
+
+[OUTPUT]
+r_state@0.0.4
+r_state@1
+r_state@2
+#workload_add:0...15
+#next_state_is_workstation
+#complete_work_with_robot
+#arriving_at_0
+
+
+
+[ENV_TRANS]
+| ! obstacle_2 ! obstacle_2'
+| ! obstacle_3 ! obstacle_3'
+
+
+
+[ENV_INIT]
+#workload = 10
+! obstacle_2
+! obstacle_3
+
+
+
+[SYS_TRANS]
+| ! & $ 1 & ! r_state@2 & ! r_state@1 & ! ^ r_state@0.0.4 1 1 obstacle_2 | $ 1 & ! r_state@2' & ! r_state@1' & ! r_state@0.0.4' 1 $ 1 & ! r_state@2' & ! r_state@1' & ! ^ r_state@0.0.4' 1 1
+#(r_state = 3) & (obstacle_2) -> (r_state' = 3) || (r_state' = 4)
+#(r_state = 2) & (obstacle_3) -> (r_state' = 1) || (r_state' = 0) || (r_state' = 2)
+#(r_state = 4) & (obstacle_3) -> (r_state' = 4)
+
+
+| ! $ 1 & ! r_state@2 & ! r_state@1 & ! r_state@0.0.4 1 | $ 1 & ! r_state@2' & ! r_state@1' & ! r_state@0.0.4' 1 $ 1 & ! r_state@2' & ! r_state@1' & ! ^ r_state@0.0.4' 1 1
+| ! $ 1 & ! r_state@2 & ! r_state@1 & ! ^ r_state@0.0.4 1 1 | $ 1 & ! r_state@2' & ! r_state@1' & ! ^ r_state@0.0.4' 1 1 $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 0 1
+| ! $ 1 & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 0 1 | | | $ 1 & ! r_state@2' & ! r_state@1' & ! r_state@0.0.4' 1 $ 1 & ! r_state@2' & ! r_state@1' & ! ^ r_state@0.0.4' 1 1 $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 0 1 $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 1 1
+#(r_state = 2) & complete_work_with_robot  -> (r_state' = 0) || (r_state' = 2) || (r_state' = 3)
+#(r_state = 2) & !complete_work_with_robot -> (r_state' = 1) || (r_state' = 2) || (r_state' = 3)
+| ! $ 1 & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 1 1 | | $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 0 1 $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 1 1 $ 1 & ! ^ r_state@2' 1 & ! ^ r_state@1' 0 & ! ^ r_state@0.0.4' 0 1
+| ! $ 1 & ! ^ r_state@2 1 & ! ^ r_state@1 0 & ! ^ r_state@0.0.4 0 1 | $ 1 & ! ^ r_state@2' 1 & ! ^ r_state@1' 0 & ! ^ r_state@0.0.4' 0 1 $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 1 1
+
+#!(obstacle_2 & r_state = 2)
+#!(obstacle_3 & r_state = 3)
+
+| ! obstacle_2 $ 1 ! & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 0 1
+| ! obstacle_3 $ 1 ! & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 1 1
+
+
+## Variable limits: 0<=r_state'<=4
+| ! r_state@2' & ! r_state@1' | ! r_state@0.0.4' 0
+
+[SYS_INIT]
+$ 1 & ! r_state@2 & ! r_state@1 & ! ^ r_state@0.0.4 1 1
+
+## Variable limits: 0<=r_state<=4
+| ! r_state@2 & ! r_state@1 | ! r_state@0.0.4 0
+
+[ENV_LIVENESS]
+& ! obstacle_2 ! obstacle_3
+& ! obstacle_2 obstacle_3
+& obstacle_2 ! obstacle_3
+
+
+[SYS_LIVENESS]
+$ 1 & ! r_state@2 & ! r_state@1 & ! r_state@0.0.4 1
+#(r_state = 4)
+
