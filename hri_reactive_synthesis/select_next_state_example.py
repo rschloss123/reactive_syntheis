@@ -71,14 +71,14 @@ def test_commands(nodes_dict, transitions_dict):
 	test_steps = 1
 
 	key_options = nodes_dict.keys()
-	node_num = str(random.choice(key_options)) #'15230'  
+	node_num = '5798' #str(random.choice(key_options)) #'15230'  
 
 
-	commands = ['r_state', 'workload_add', 'next_state_is_workstation', 'complete_work_with_robot', 'arriving_at_0']
+	commands = ['r_state', 'complete_work_with_robot']
 
 	# environment = ['wait', 'obstacle2', 'obstacle3', 'workload', 'complete_work_at_workstation', 'complete_dropoff_success', 'complete_dropoff_tries', 'workload_stays_constant']
 
-	environment = ['wait', 'obstacle2', 'workload', 'complete_work_at_workstation', 'complete_dropoff_success', 'complete_dropoff_tries', 'workload_stays_constant']
+	environment = ['wait', 'obstacle2', 'workload', 'complete_work_at_workstation', 'complete_dropoff_success', 'complete_dropoff_tries', 'workload_stays_constant', 'workload_add', 'next_state_is_workstation', 'arriving_at_0']
 
 
 
@@ -150,6 +150,8 @@ def test_commands(nodes_dict, transitions_dict):
 				print "r_state", nodes_dict[node_options]['r_state']
 					
 				for key in environment:
+					print key, nodes_dict[node_options][key]
+				for key in commands:
 					print key, nodes_dict[node_options][key]
 				if all(nodes_dict[node_options][key] == environment_states[key] for key in environment):
 					node_num = node_options
