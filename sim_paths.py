@@ -159,6 +159,12 @@ def get_lookup():
 
 	]
 
+	# lookup = [
+	# 	{'name': 'obstacle2', 'bits': 1},
+	# 	{'name': 'obstacle3', 'bits': 1},
+	# 	{'name': 'r_state', 'bits': 3},
+	# ]
+
 	return lookup
 
 
@@ -190,79 +196,3 @@ if __name__ == '__main__':
 	main()
 
 
-
-
-	# # list of dictionaries
-	# park_lookup = [
-	# 	{'name': 'o_state', 'bits': 4},
-	# 	{'name': 'park', 'bits': 1},
-	# 	{'name': 'a_state', 'bits': 4}
-	# ]
-
-	# park_file = '/home/formal/cyberphysical_systems/hw5/prob1/ctrl.json'
-	# park_sim = Controller(park_lookup, park_file)
-	# node_init = '0'
-	# park_sim.simulate(node_init, 50)
-
-	# list of dictionaries
-	# elevator_lookup = [
-	# 	{'name': 'Call1', 'bits': 3},
-	# 	# {'name': 'Call2', 'bits': 3},
-	# 	{'name': 'Open', 'bits': 3},
-	# 	{'name': 'Floor', 'bits': 2}
-	# ]
-
-	# elevator_lookup = [
-	# 	{'name': 'Req0', 'bits': 1},
-	# 	{'name': 'Req1', 'bits': 1},
-	# 	{'name': 'Req2', 'bits': 1},
-	# 	{'name': 'Req3', 'bits': 1},
-	# 	{'name': 'Num_Req', 'bits': 2},
-	# 	# {'name': 'Not_Req3', 'bits': 3},		
-	# 	{'name': 'Open0', 'bits': 1},
-	# 	{'name': 'Open1', 'bits': 1},
-	# 	{'name': 'Open2', 'bits': 1},
-	# 	{'name': 'Open3', 'bits': 1},
-	# 	{'name': 'Floor', 'bits': 2}
-	# ]
-
-
-	# elevator_file = '/home/formal/cyberphysical_systems/hw5/prob3/elevator_deadlock.json'
-	# elevator_sim = Controller(elevator_lookup, elevator_file)
-	# node_init = '0'
-	# elevator_sim.simulate(node_init, 2)
-
-
-	# intersection_lookup = [
-	# 	{'name': 'Start3', 'bits': 4},
-	# 	{'name': 'Start4', 'bits': 4},
-	# 	{'name': 'Start7', 'bits': 4},
-	# 	{'name': 'Clear_o', 'bits': 1},
-	# 	{'name': 'Init_Wait3', 'bits': 1},
-	# 	{'name': 'Init_Wait4', 'bits': 1},
-	# 	{'name': 'Init_Wait7', 'bits': 1},
-	# 	{'name': 'C_state', 'bits': 4},
-	# 	{'name': 'Clear_c', 'bits': 1}
-	# ]
-
-	# intersection_file = '/home/formal/cyberphysical_systems/hw5/prob2/ctrl_intersection.json'
-	# intersection_sim = Controller(intersection_lookup, intersection_file)
-	# node_init = '10'
-	# intersection_sim.simulate(node_init, 10)
-
-
-
-	
-	# dreamer_lookup = [
-	# 	{'name': 'h_state', 'bits': 2},
-	# 	{'name': 'h_closed', 'bits': 1},
-	# 	{'name': 'r_state', 'bits': 2},
-	# 	{'name': 'r_closed', 'bits': 1}
-	# ]
-
-	# dreamer_file = '/home/formal/cyberphysical_systems/hw5/two_player/ctrl.json'
-	# dreamer_sim = Controller(dreamer_lookup, dreamer_file)
-	# node_init = '0'
-	# var_list = dreamer_sim.simulate(node_init, 10)
-
-	# print var_list
