@@ -83,7 +83,7 @@ class Controller():
 		# 'open' is a file handle and is being stored as f 
 		with open(file_name, 'r') as f :
 			self.file_content = json.load(f)
-			self.file_content = clean(self.file_content)
+			# self.file_content = clean(self.file_content)
 
 		self.num_nodes = len(self.file_content['nodes'])
 		self.name_and_bits = name_and_bits
@@ -142,28 +142,28 @@ class Controller():
 
 def get_lookup():
 
-	lookup = [
-		{'name': 'wait', 'bits': 1},
-		{'name': 'obstacle2', 'bits': 1},
-		{'name': 'obstacle3', 'bits': 1},
-		{'name': 'workload', 'bits': 5},
-		{'name': 'complete_work_at_workstation', 'bits': 1},
-		{'name': 'complete_dropoff_success', 'bits': 1},
-		{'name': 'complete_dropoff_tries', 'bits': 2},
-		{'name': 'workload_stays_constant', 'bits': 1},
-		{'name': 'r_state', 'bits': 3},
-		{'name': 'workload_add', 'bits': 4},
-		{'name': 'next_state_is_workstation', 'bits': 1},
-		{'name': 'complete_work_with_robot', 'bits': 1},
-		{'name': 'arriving_at_0', 'bits': 1},
-
-	]
-
 	# lookup = [
+	# 	{'name': 'wait', 'bits': 1},
 	# 	{'name': 'obstacle2', 'bits': 1},
 	# 	{'name': 'obstacle3', 'bits': 1},
+	# 	{'name': 'workload', 'bits': 5},
+	# 	{'name': 'complete_work_at_workstation', 'bits': 1},
+	# 	{'name': 'complete_dropoff_success', 'bits': 1},
+	# 	{'name': 'complete_dropoff_tries', 'bits': 2},
+	# 	{'name': 'workload_stays_constant', 'bits': 1},
 	# 	{'name': 'r_state', 'bits': 3},
+	# 	{'name': 'workload_add', 'bits': 4},
+	# 	{'name': 'next_state_is_workstation', 'bits': 1},
+	# 	{'name': 'complete_work_with_robot', 'bits': 1},
+	# 	{'name': 'arriving_at_0', 'bits': 1},
+
 	# ]
+
+	lookup = [
+		{'name': 'obstacle2', 'bits': 1},
+		# {'name': 'obstacle3', 'bits': 1},
+		{'name': 'r_state', 'bits': 3},
+	]
 
 	return lookup
 
@@ -179,14 +179,14 @@ def main():
 
 	delivery_sim = Controller(delivery_lookup, delivery_file)
 	node_init = '0'
-	# var_list = delivery_sim.simulate(node_init, 50)
+	var_list = delivery_sim.simulate(node_init, 50)
 	
-	(node_dictionary, transition_dictionary) = delivery_sim.json_to_dictionary()
+	# (node_dictionary, transition_dictionary) = delivery_sim.json_to_dictionary()
 
-	node_file = os.path.join(path_location, 'hri_reactive_synthesis', 'node_dictionary.json')
-	transition_file = os.path.join(path_location, 'hri_reactive_synthesis', 'transition_dictionary.json')
-	delivery_sim.save_dictionary_as_json(node_dictionary, node_file)
-	delivery_sim.save_dictionary_as_json(transition_dictionary, transition_file)
+	# node_file = os.path.join(path_location, 'hri_reactive_synthesis', 'node_dictionary.json')
+	# transition_file = os.path.join(path_location, 'hri_reactive_synthesis', 'transition_dictionary.json')
+	# delivery_sim.save_dictionary_as_json(node_dictionary, node_file)
+	# delivery_sim.save_dictionary_as_json(transition_dictionary, transition_file)
 
 
 
