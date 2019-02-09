@@ -68,7 +68,7 @@ def test_transitions(nodes_dict, transitions_dict):
 def test_commands(nodes_dict, transitions_dict):
 
 
-	test_steps = 3
+	test_steps = 1
 
 	key_options = nodes_dict.keys()
 	node_num = str(random.choice(key_options)) #'1682'  
@@ -81,6 +81,7 @@ def test_commands(nodes_dict, transitions_dict):
 
 
 	for i in range(0, test_steps):
+		test = False 
 
 		current_node_states = nodes_dict[node_num]
 		print "current state"
@@ -108,33 +109,38 @@ def test_commands(nodes_dict, transitions_dict):
 
 		# testing if we don't get a match
 		if (current_node_states['obstacle2'] == 0 and current_node_states['obstacle3'] == 0) and all(nodes_dict[node]['obstacle2']== 0 and nodes_dict[node]['obstacle3'] == 0  for node in transition_options):
-			r = random.choice([0, 1])
+			r = 1 #random.choice([0, 1])
 			if all(nodes_dict[key]['r_state'] == 2 for key in transition_options):
 			 	environment_states['obstacle3'] = r
 			 	next_states['obstacle3'] = r
+
+				print "TEST"
+				test = True 
 			if all(nodes_dict[key]['r_state'] == 3 for key in transition_options):
 			 	environment_states['obstacle2'] = r
 			 	next_states['obstacle2'] = r
+				print "TEST"
+				test = True 
 
-			print "TEST"
 			
 
-		print "next_states"
-		for key, val in next_states.items():
-			print key, val 
-		print "\n"
+		# print "next_states"
+		# for key, val in next_states.items():
+			# print key, val 
+		# print "\n"
 
 		success = False 
 		while success == False: 
 
 			for node_options in transition_options:
-				# for key in environment: 
-					# print key, nodes_dict[node_options][key]
+				print "r_state", nodes_dict[node_options]['r_state']
+				for key in environment: 
+					print key, nodes_dict[node_options][key]
 				if all(nodes_dict[node_options][key] == environment_states[key] for key in environment):
 					node_num = node_options
 					print "SELECTED OPTION", node_num
 					success = True 
-				# print "\n"
+				print "\n"
 
 			match = False  
 			if success == False: 
@@ -169,6 +175,8 @@ def test_commands(nodes_dict, transitions_dict):
 					if match == True:
 						break 
 
+		if test == True: 
+			exit()
 
 		robot_commands = {}
 		for c in commands:

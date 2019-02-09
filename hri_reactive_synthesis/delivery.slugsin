@@ -27,6 +27,8 @@ workload_add@3
 next_state_is_workstation
 complete_work_with_robot
 arriving_at_0
+arriving_at_2
+arriving_at_3
 
 
 
@@ -35,11 +37,18 @@ arriving_at_0
 # Obstacles will get out of the way
 | ! obstacle_2 ! obstacle_2'
 | ! obstacle_3 ! obstacle_3'
+
+
 # Obstacle will not intentionally interfere with the robot
-| ! $ 1 & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 0 1 ! obstacle_2
-| ! $ 1 & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 1 1 ! obstacle_3
-#r_state = 3 -> (!obstacle_3' || obstacle_3')
-#r_state = 2 -> (!obstacle_2' || obstacle_2')
+#r_state = 2 -> !obstacle_2
+#r_state = 3 -> !obstacle_3
+#r_state = 3 -> (!obstacle_3 || obstacle_3)
+#r_state = 2 -> (!obstacle_2 || obstacle_2)
+
+| ! arriving_at_2 & ! obstacle_2' | obstacle_3' ! obstacle_3'
+| ! ! arriving_at_2 | obstacle_2' ! obstacle_2'
+| ! arriving_at_3 & ! obstacle_3' | obstacle_2' ! obstacle_2'
+| ! ! arriving_at_3 | obstacle_3' ! obstacle_3'
 
 # Waiting behavior
 | ! & $ 1 & ! workload@4 & ! workload@3 & ! workload@2 & ! workload@1 & ! workload@0.0.30 1 $ 1 ! & ! ^ r_state@2 1 & ! ^ r_state@1 0 & ! ^ r_state@0.0.4 0 1 wait
@@ -117,34 +126,58 @@ $ 1 & ! ^ workload@4 1 & ! ^ workload@3 1 & ! ^ workload@2 0 & ! ^ workload@1 0 
 | ! & $ 1 ! & ! r_state@2 & ! r_state@1 & ! r_state@0.0.4 1 $ 1 & ! r_state@2' & ! r_state@1' & ! r_state@0.0.4' 1 arriving_at_0
 | ! ! & $ 1 ! & ! r_state@2 & ! r_state@1 & ! r_state@0.0.4 1 $ 1 & ! r_state@2' & ! r_state@1' & ! r_state@0.0.4' 1 ! arriving_at_0
 
+
+| ! $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 0 1 arriving_at_2
+| ! $ 1 ! & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 0 1 ! arriving_at_2
+| ! $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 1 1 arriving_at_3
+| ! $ 1 ! & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 1 1 ! arriving_at_3
+
 # Once the robot successfully drops off work, move to state 1
 | ! & $ 1 & ! r_state@2 & ! r_state@1 & ! r_state@0.0.4 1 ! complete_dropoff_success $ 1 & ! r_state@2' & ! r_state@1' & ! r_state@0.0.4' 1
 | ! & $ 1 & ! r_state@2 & ! r_state@1 & ! r_state@0.0.4 1 complete_dropoff_success | $ 1 & ! r_state@2' & ! r_state@1' & ! ^ r_state@0.0.4' 1 1 $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 0 1
 
 # Allowable robot transitions
-| ! & $ 1 & ! r_state@2 & ! r_state@1 & ! r_state@0.0.4 1 obstacle_2 | $ 1 & ! r_state@2' & ! r_state@1' & ! r_state@0.0.4' 1 $ 1 & ! r_state@2' & ! r_state@1' & ! ^ r_state@0.0.4' 1 1
-| ! & $ 1 & ! r_state@2 & ! r_state@1 & ! ^ r_state@0.0.4 1 1 obstacle_2 | $ 1 & ! r_state@2' & ! r_state@1' & ! r_state@0.0.4' 1 $ 1 & ! r_state@2' & ! r_state@1' & ! ^ r_state@0.0.4' 1 1
-| ! & $ 1 & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 1 1 obstacle_2 | $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 1 1 $ 1 & ! ^ r_state@2' 1 & ! ^ r_state@1' 0 & ! ^ r_state@0.0.4' 0 1
-| ! & $ 1 & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 0 1 obstacle_3 | | $ 1 & ! r_state@2' & ! r_state@1' & ! ^ r_state@0.0.4' 1 1 $ 1 & ! r_state@2' & ! r_state@1' & ! r_state@0.0.4' 1 $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 0 1
-| ! & $ 1 & ! ^ r_state@2 1 & ! ^ r_state@1 0 & ! ^ r_state@0.0.4 0 1 obstacle_3 $ 1 & ! ^ r_state@2' 1 & ! ^ r_state@1' 0 & ! ^ r_state@0.0.4' 0 1
+#(r_state = 0) & (obstacle_2) -> (r_state' = 0) || (r_state' = 1)
+#(r_state = 1) & (obstacle_2) -> (r_state' = 0) || (r_state' = 1)
+#(r_state = 3) & (obstacle_2) -> (r_state' = 3) || (r_state' = 4)
+#(r_state = 2) & (obstacle_3) -> (r_state' = 1) || (r_state' = 0) || (r_state' = 2)
+#(r_state = 4) & (obstacle_3) -> (r_state' = 4)
 
-| ! $ 1 & ! r_state@2 & ! r_state@1 & ! r_state@0.0.4 1 | $ 1 & ! r_state@2' & ! r_state@1' & ! r_state@0.0.4' 1 $ 1 & ! r_state@2' & ! r_state@1' & ! ^ r_state@0.0.4' 1 1
-| ! $ 1 & ! r_state@2 & ! r_state@1 & ! ^ r_state@0.0.4 1 1 | $ 1 & ! r_state@2' & ! r_state@1' & ! ^ r_state@0.0.4' 1 1 $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 0 1
-| ! & $ 1 & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 0 1 complete_work_with_robot | | $ 1 & ! r_state@2' & ! r_state@1' & ! r_state@0.0.4' 1 $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 0 1 $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 1 1
-| ! & $ 1 & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 0 1 ! complete_work_with_robot | | $ 1 & ! r_state@2' & ! r_state@1' & ! ^ r_state@0.0.4' 1 1 $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 0 1 $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 1 1
-| ! $ 1 & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 1 1 | | $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 0 1 $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 1 1 $ 1 & ! ^ r_state@2' 1 & ! ^ r_state@1' 0 & ! ^ r_state@0.0.4' 0 1
-| ! $ 1 & ! ^ r_state@2 1 & ! ^ r_state@1 0 & ! ^ r_state@0.0.4 0 1 | $ 1 & ! ^ r_state@2' 1 & ! ^ r_state@1' 0 & ! ^ r_state@0.0.4' 0 1 $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 1 1
+| ! & & $ 1 & ! r_state@2 & ! r_state@1 & ! r_state@0.0.4 1 obstacle_2 | complete_work_with_robot ! complete_work_with_robot | $ 1 & ! r_state@2' & ! r_state@1' & ! r_state@0.0.4' 1 $ 1 & ! r_state@2' & ! r_state@1' & ! ^ r_state@0.0.4' 1 1
+| ! & & $ 1 & ! r_state@2 & ! r_state@1 & ! r_state@0.0.4 1 ! obstacle_2 | complete_work_with_robot ! complete_work_with_robot | $ 1 & ! r_state@2' & ! r_state@1' & ! r_state@0.0.4' 1 $ 1 & ! r_state@2' & ! r_state@1' & ! ^ r_state@0.0.4' 1 1
+| ! & & $ 1 & ! r_state@2 & ! r_state@1 & ! ^ r_state@0.0.4 1 1 obstacle_2 | complete_work_with_robot ! complete_work_with_robot $ 1 & ! r_state@2' & ! r_state@1' & ! ^ r_state@0.0.4' 1 1
+| ! & & $ 1 & ! r_state@2 & ! r_state@1 & ! ^ r_state@0.0.4 1 1 ! obstacle_2 | complete_work_with_robot ! complete_work_with_robot | $ 1 & ! r_state@2' & ! r_state@1' & ! ^ r_state@0.0.4' 1 1 $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 0 1
+
+| ! & & $ 1 & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 0 1 obstacle_3 complete_work_with_robot | $ 1 & ! r_state@2' & ! r_state@1' & ! r_state@0.0.4' 1 $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 0 1
+| ! & & $ 1 & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 0 1 ! obstacle_3 complete_work_with_robot | | $ 1 & ! r_state@2' & ! r_state@1' & ! r_state@0.0.4' 1 $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 0 1 $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 1 1
+| ! & & $ 1 & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 0 1 obstacle_3 ! complete_work_with_robot | $ 1 & ! r_state@2' & ! r_state@1' & ! ^ r_state@0.0.4' 1 1 $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 0 1
+| ! & & $ 1 & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 0 1 ! obstacle_3 ! complete_work_with_robot | | $ 1 & ! r_state@2' & ! r_state@1' & ! ^ r_state@0.0.4' 1 1 $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 0 1 $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 1 1
+
+| ! & & $ 1 & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 1 1 obstacle_2 | complete_work_with_robot ! complete_work_with_robot | $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 1 1 $ 1 & ! ^ r_state@2' 1 & ! ^ r_state@1' 0 & ! ^ r_state@0.0.4' 0 1
+| ! & & $ 1 & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 1 1 ! obstacle_2 | complete_work_with_robot ! complete_work_with_robot | | $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 0 1 $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 1 1 $ 1 & ! ^ r_state@2' 1 & ! ^ r_state@1' 0 & ! ^ r_state@0.0.4' 0 1
+| ! & & $ 1 & ! ^ r_state@2 1 & ! ^ r_state@1 0 & ! ^ r_state@0.0.4 0 1 obstacle_3 | complete_work_with_robot ! complete_work_with_robot $ 1 & ! ^ r_state@2' 1 & ! ^ r_state@1' 0 & ! ^ r_state@0.0.4' 0 1
+| ! & & $ 1 & ! ^ r_state@2 1 & ! ^ r_state@1 0 & ! ^ r_state@0.0.4 0 1 ! obstacle_3 | complete_work_with_robot ! complete_work_with_robot | $ 1 & ! ^ r_state@2' 1 & ! ^ r_state@1' 0 & ! ^ r_state@0.0.4' 0 1 $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 1 1
+
+#(r_state = 0) -> (r_state' = 0) || (r_state' = 1)
+#(r_state = 1) -> (r_state' = 1) || (r_state' = 2)
+#(r_state = 2) & complete_work_with_robot  -> (r_state' = 0) || (r_state' = 2) || (r_state' = 3)
+#(r_state = 2) & !complete_work_with_robot -> (r_state' = 1) || (r_state' = 2) || (r_state' = 3)
+#(r_state = 3) -> (r_state' = 2) || (r_state' = 3) || (r_state' = 4)
+#(r_state = 4) -> (r_state' = 4) || (r_state' = 3)
 
 $ 1 | workload@4 | workload@3 | workload@2 | workload@1 | workload@0.0.30 0
 
 $ 1 | & ! workload@4 1 & | 1 ! workload@4 | & ! workload@3 1 & | 1 ! workload@3 | & ! workload@2 0 & | 0 ! workload@2 | & ! workload@1 1 & | 1 ! workload@1 | & ! workload@0.0.30 0 & | 0 ! workload@0.0.30 1
+
+
+#obstacle_2 -> r_state' != 2
+#obstacle_3 -> r_state' != 3
 
 ## Variable limits: 0<=r_state'<=4
 | ! r_state@2' & ! r_state@1' | ! r_state@0.0.4' 0
 
 [SYS_INIT]
 $ 1 & ! r_state@2 & ! r_state@1 & ! ^ r_state@0.0.4 1 1
-#r_state = 1 || (r_state = 2 & (obstacle_3  || !obstacle_3 )) || (r_state = 3 & #(obstacle_2  || !obstacle_2 )) || r_state = 4
 ! next_state_is_workstation
 ! complete_work_with_robot
 $ 1 & ! workload_add@3 & ! workload_add@2 & ! workload_add@1 & ! workload_add@0.0.15 1
