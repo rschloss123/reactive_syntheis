@@ -1,7 +1,7 @@
 {"version": 0,
  "slugs": "0.0.1",
 
- "variables": ["wait", "obstacle_2", "obstacle_3", "workload@0.0.30", "workload@1", "workload@2", "workload@3", "workload@4", "complete_work_at_workstation", "complete_dropoff_success", "complete_dropoff_tries@0.0.2", "complete_dropoff_tries@1", "workload_stays_constant", "r_state@0.0.4", "r_state@1", "r_state@2", "workload_add@0.0.15", "workload_add@1", "workload_add@2", "workload_add@3", "next_state_is_workstation", "complete_work_with_robot", "arriving_at_0", "arriving_at_2", "arriving_at_3"],
+ "variables": ["wait", "obstacle_2", "obstacle_3", "workload@0.0.30", "workload@1", "workload@2", "workload@3", "workload@4", "complete_work_at_workstation", "complete_dropoff_success", "complete_dropoff_tries@0.0.2", "complete_dropoff_tries@1", "workload_stays_constant", "r_state@0.0.4", "r_state@1", "r_state@2", "workload_add@0.0.15", "workload_add@1", "workload_add@2", "workload_add@3", "next_state_is_workstation", "complete_work_with_robot", "next_arriving_at_0", "next_is_2", "next_is_3"],
 
  "nodes": {
 "0": {

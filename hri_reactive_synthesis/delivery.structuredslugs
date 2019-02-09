@@ -15,9 +15,9 @@ r_state:0...4
 workload_add:0...15
 next_state_is_workstation
 complete_work_with_robot
-arriving_at_0
-arriving_at_2
-arriving_at_3
+next_arriving_at_0
+next_is_2
+next_is_3
 
 
 
@@ -47,10 +47,10 @@ obstacle_3 -> !obstacle_3'
 #r_state = 3 -> (!obstacle_3 || obstacle_3) 
 #r_state = 2 -> (!obstacle_2 || obstacle_2) 
 
-arriving_at_2 -> !obstacle_2' & (obstacle_3' || !obstacle_3')
-!arriving_at_2 -> obstacle_2' || !obstacle_2'
-arriving_at_3 -> !obstacle_3' & (obstacle_2' || !obstacle_2')
-!arriving_at_3 -> (obstacle_3' || !obstacle_3')
+next_is_2 -> !obstacle_2' & (obstacle_3' || !obstacle_3')
+!next_is_2 -> obstacle_2' || !obstacle_2'
+next_is_3 -> !obstacle_3' & (obstacle_2' || !obstacle_2')
+!next_is_3 -> (obstacle_3' || !obstacle_3')
 
 # Waiting behavior
 workload = 0 & r_state != 4 -> wait
@@ -77,7 +77,7 @@ next_state_is_workstation -> !complete_work_at_workstation'
 complete_work_with_robot & r_state = 0 & !complete_dropoff_success -> (complete_dropoff_success' || !complete_dropoff_success') 
 complete_dropoff_tries = 1 & !complete_dropoff_success -> complete_dropoff_success'
 
-arriving_at_0 -> (complete_dropoff_tries' = 0) & (!complete_dropoff_success')
+next_arriving_at_0 -> (complete_dropoff_tries' = 0) & (!complete_dropoff_success')
 r_state = 0 & complete_dropoff_tries < 2 & !complete_dropoff_success -> complete_dropoff_tries' = (complete_dropoff_tries + 1) 
 
 complete_dropoff_success -> (complete_dropoff_tries' = 0 & !complete_dropoff_success') 
@@ -111,14 +111,14 @@ complete_work_with_robot & r_state != 0 -> complete_work_with_robot'
 
 !complete_work_with_robot & !next_state_is_workstation -> !complete_work_with_robot'
 
-r_state != 0 & r_state' = 0 -> arriving_at_0
-!(r_state != 0 & r_state' = 0) -> !arriving_at_0
+r_state != 0 & r_state' = 0 -> next_arriving_at_0
+!(r_state != 0 & r_state' = 0) -> !next_arriving_at_0
 
 
-r_state' = 2 -> arriving_at_2
-r_state' != 2 -> !arriving_at_2
-r_state' = 3 -> arriving_at_3
-r_state' != 3 -> !arriving_at_3
+r_state' = 2 -> next_is_2
+r_state' != 2 -> !next_is_2
+r_state' = 3 -> next_is_3
+r_state' != 3 -> !next_is_3
 
 # Once the robot successfully drops off work, move to state 1
 r_state = 0 &  !complete_dropoff_success -> r_state' = 0

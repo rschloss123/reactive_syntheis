@@ -59,7 +59,10 @@ def variables_to_base10(node, name_and_bits):
 
 		val_base_10 = int(bin_string,2)
 
-		print name+":", val_base_10
+		if name != 'next_state_is_workstation' and name != 'next_arriving_at_0' and name != 'next_is_2' and name != 'next_is_3':
+
+
+			print name+":", val_base_10
 		 
 
 		list_local.append(val_base_10)
@@ -155,9 +158,9 @@ def get_lookup():
 		{'name': 'workload_add', 'bits': 4},
 		{'name': 'next_state_is_workstation', 'bits': 1},
 		{'name': 'complete_work_with_robot', 'bits': 1},
-		{'name': 'arriving_at_0', 'bits': 1},
-		{'name': 'arriving_at_2', 'bits': 1},
-		{'name': 'arriving_at_3', 'bits': 1},
+		{'name': 'next_arriving_at_0', 'bits': 1},
+		{'name': 'next_is_2', 'bits': 1},
+		{'name': 'next_is_3', 'bits': 1},
 
 	]
 
@@ -181,14 +184,14 @@ def main():
 
 	delivery_sim = Controller(delivery_lookup, delivery_file)
 	node_init = '0'
-	# var_list = delivery_sim.simulate(node_init, 50)
+	var_list = delivery_sim.simulate(node_init, 50)
 	
-	(node_dictionary, transition_dictionary) = delivery_sim.json_to_dictionary()
+	# (node_dictionary, transition_dictionary) = delivery_sim.json_to_dictionary()
 
-	node_file = os.path.join(path_location, 'hri_reactive_synthesis', 'node_dictionary.json')
-	transition_file = os.path.join(path_location, 'hri_reactive_synthesis', 'transition_dictionary.json')
-	delivery_sim.save_dictionary_as_json(node_dictionary, node_file)
-	delivery_sim.save_dictionary_as_json(transition_dictionary, transition_file)
+	# node_file = os.path.join(path_location, 'hri_reactive_synthesis', 'node_dictionary.json')
+	# transition_file = os.path.join(path_location, 'hri_reactive_synthesis', 'transition_dictionary.json')
+	# delivery_sim.save_dictionary_as_json(node_dictionary, node_file)
+	# delivery_sim.save_dictionary_as_json(transition_dictionary, transition_file)
 
 
 

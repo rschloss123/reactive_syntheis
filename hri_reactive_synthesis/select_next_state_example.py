@@ -76,7 +76,7 @@ def test_commands(nodes_dict, transitions_dict):
 
 	print "node_num", node_num
 
-	commands = ['r_state', 'workload_add', 'next_state_is_workstation', 'complete_work_with_robot', 'arriving_at_0']
+	commands = ['r_state', 'workload_add', 'next_state_is_workstation', 'complete_work_with_robot', 'next_arriving_at_0']
 	environment = ['wait', 'obstacle2', 'obstacle3', 'workload', 'complete_work_at_workstation', 'complete_dropoff_success', 'complete_dropoff_tries', 'workload_stays_constant']
 
 
