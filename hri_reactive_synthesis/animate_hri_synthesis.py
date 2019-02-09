@@ -36,17 +36,17 @@ def mapping(states_one_step):
 			patch_O3.center = (2.5, 0.9)
 
 		# robot
-		if states_one_step[10] == 1:
+		if states_one_step[11] == 1:
 			patch_r.set_fc('c')
 		else: 
 			patch_r.set_fc('y')
-		if states_one_step[7] == 0:
+		if states_one_step[8] == 0:
 			patch_r.center = (0.5, 0.8)
-		elif states_one_step[7] == 1: 
+		elif states_one_step[8] == 1: 
 			patch_r.center = (0.5, 0.5)
-		elif states_one_step[7] == 2: 
+		elif states_one_step[8] == 2: 
 			patch_r.center = (1.5, 0.5)
-		elif states_one_step[7] == 3: 
+		elif states_one_step[8] == 3: 
 			patch_r.center = (2.5, 0.5)
 		else:    
 			patch_r.center = (3.48, 0.5)
@@ -98,7 +98,7 @@ delivery_lookup = sim_paths.get_lookup()
 delivery_file = os.path.join(path_location, 'ctrl.json')
 delivery_sim = sim_paths.Controller(delivery_lookup, delivery_file)
 node_init = '0'
-var_list = delivery_sim.simulate(node_init, 40)
+var_list = delivery_sim.simulate(node_init, 60)
 
 
 l = len(var_list)

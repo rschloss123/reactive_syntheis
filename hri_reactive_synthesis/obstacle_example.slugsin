@@ -1,0 +1,62 @@
+[INPUT]
+obstacle_2
+#obstacle_3
+
+
+[OUTPUT]
+r_state@0.0.4
+r_state@1
+r_state@2
+
+
+[ENV_TRANS]
+| ! obstacle_2 ! obstacle_2'
+#!obstacle_2 -> (!obstacle_2' |
+#obstacle_3 -> !obstacle_3'
+
+# INTRODUCES TERMINAL STATE
+| ! $ 1 & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 0 1 ! obstacle_2
+| ! $ 1 & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 0 1 ! obstacle_2'
+
+
+
+[ENV_INIT]
+
+
+
+[SYS_TRANS]
+| ! $ 1 & ! r_state@2 & ! r_state@1 & ! r_state@0.0.4 1 | $ 1 & ! r_state@2' & ! r_state@1' & ! r_state@0.0.4' 1 $ 1 & ! r_state@2' & ! r_state@1' & ! ^ r_state@0.0.4' 1 1
+| ! $ 1 & ! r_state@2 & ! r_state@1 & ! ^ r_state@0.0.4 1 1 | $ 1 & ! r_state@2' & ! r_state@1' & ! ^ r_state@0.0.4' 1 1 $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 0 1
+| ! $ 1 & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 0 1 | | | $ 1 & ! r_state@2' & ! r_state@1' & ! r_state@0.0.4' 1 $ 1 & ! r_state@2' & ! r_state@1' & ! ^ r_state@0.0.4' 1 1 $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 0 1 $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 1 1
+| ! $ 1 & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 1 1 | | $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 0 1 $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 1 1 $ 1 & ! ^ r_state@2' 1 & ! ^ r_state@1' 0 & ! ^ r_state@0.0.4' 0 1
+| ! $ 1 & ! ^ r_state@2 1 & ! ^ r_state@1 0 & ! ^ r_state@0.0.4 0 1 | $ 1 & ! ^ r_state@2' 1 & ! ^ r_state@1' 0 & ! ^ r_state@0.0.4' 0 1 $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 1 1
+
+| ! & $ 1 & ! r_state@2 & ! r_state@1 & ! ^ r_state@0.0.4 1 1 obstacle_2 | $ 1 & ! r_state@2' & ! r_state@1' & ! r_state@0.0.4' 1 $ 1 & ! r_state@2' & ! r_state@1' & ! ^ r_state@0.0.4' 1 1
+| ! & $ 1 & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 1 1 obstacle_2 | $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 1 1 $ 1 & ! ^ r_state@2' 1 & ! ^ r_state@1' 0 & ! ^ r_state@0.0.4' 0 1
+#(r_state = 2) & (obstacle_3) -> (r_state' = 1) || (r_state' = 0) || (r_state' = 2)
+#(r_state = 4) & (obstacle_3) -> (r_state' = 4)
+
+# Makes system unrealizable
+| ! obstacle_2 $ 1 ! & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 0 1
+#obstacle_2 -> r_state != 2
+
+# Makes system unrealizable
+#!(r_state = 2 & obstacle_2)
+
+## Variable limits: 0<=r_state'<=4
+| ! r_state@2' & ! r_state@1' | ! r_state@0.0.4' 0
+
+[SYS_INIT]
+$ 1 & ! r_state@2 & ! r_state@1 & ! ^ r_state@0.0.4 1 1
+
+## Variable limits: 0<=r_state<=4
+| ! r_state@2 & ! r_state@1 | ! r_state@0.0.4 0
+
+[ENV_LIVENESS]
+
+
+
+[SYS_LIVENESS]
+$ 1 & ! r_state@2 & ! r_state@1 & ! r_state@0.0.4 1
+$ 1 & ! ^ r_state@2 1 & ! ^ r_state@1 0 & ! ^ r_state@0.0.4 0 1
+

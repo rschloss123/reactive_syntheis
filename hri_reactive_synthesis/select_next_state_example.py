@@ -23,7 +23,7 @@ def check_dictionary_comparisons(nodes_dict, transitions_dict):
 	# check = {'workload':14, 'obstacle2': 0, 'obstacle3': 0, 'workload_stays_constant': 0, 'complete_work_with_robot': 0, 'arriving_at_0': 0, 'r_state': 2, 'workload_add': 0, 'complete_work_at_workstation': 1, 'complete_dropoff_tries': 0, 'next_state_is_workstation': 0, 'complete_dropoff_success': 0, 'wait': 0}
 
 	# node_num 10322
-	check = {'workload':11, 'obstacle2': 0, 'workload_stays_constant': 0, 'complete_work_with_robot': 0, 'arriving_at_0': 0, 'r_state': 3, 'workload_add': 0, 'complete_work_at_workstation': 1, 'complete_dropoff_tries': 0, 'next_state_is_workstation': 0, 'complete_dropoff_success': 0, 'wait': 0}
+	check = {'workload':21, 'obstacle2': 0, 'obstacle3': 0, 'workload_stays_constant': 1, 'complete_work_with_robot': 1, 'arriving_at_0': 1, 'r_state': 2, 'workload_add': 0, 'complete_work_at_workstation': 1, 'complete_dropoff_tries': 0, 'next_state_is_workstation': 0, 'complete_dropoff_success': 0, 'wait': 0}
 	
 
 	# print "random key", key_random
@@ -45,7 +45,7 @@ def check_dictionary_comparisons(nodes_dict, transitions_dict):
 
 def test_transitions(nodes_dict, transitions_dict):
 
-	test_steps = 5
+	test_steps = 10
 
 	key_options = nodes_dict.keys()
 	
@@ -68,35 +68,23 @@ def test_transitions(nodes_dict, transitions_dict):
 def test_commands(nodes_dict, transitions_dict):
 
 
-	test_steps = 1
+	test_steps = 500
 
 	key_options = nodes_dict.keys()
-	node_num = '1164' #str(random.choice(key_options)) #'15230'  
+	node_num = str(random.choice(key_options)) #'1682'  
 
 
-	commands = ['r_state', 'complete_work_with_robot']
+	print "node_num", node_num
 
-	# environment = ['wait', 'obstacle2', 'obstacle3', 'workload', 'complete_work_at_workstation', 'complete_dropoff_success', 'complete_dropoff_tries', 'workload_stays_constant']
+	commands = ['r_state', 'workload_add', 'next_state_is_workstation', 'complete_work_with_robot', 'next_arriving_at_0']
+	environment = ['wait', 'obstacle2', 'obstacle3', 'workload', 'complete_work_at_workstation', 'complete_dropoff_success', 'complete_dropoff_tries', 'workload_stays_constant']
 
-	environment = ['wait', 'obstacle2', 'workload', 'complete_work_at_workstation', 'complete_dropoff_success', 'complete_dropoff_tries', 'workload_stays_constant', 'workload_add', 'next_state_is_workstation', 'arriving_at_0']
-
-
-
-
-	for key, node in nodes_dict.items():  
-		for key1, node1 in node.items():
-			print key 
-			print nodes_dict[key]['r_state']
-			print key1
-			print nodes_dict[key][key1]
-			# print environment
-			exit()
 
 	for i in range(0, test_steps):
+		test = False 
 
 		current_node_states = nodes_dict[node_num]
 		print "current state"
-		print "node_num", node_num
 		for key, val in nodes_dict[node_num].items():
 			print key, val 
 
@@ -106,62 +94,47 @@ def test_commands(nodes_dict, transitions_dict):
 
 		node_num = (random.choice(transition_options))
 
-		# Command robot to move 
-		robot_commands = {}
-		for c in commands:
-			robot_commands[c] = nodes_dict[node_num][c]
-
-
-
 		next_states = {}
 		for key, val in nodes_dict[node_num].items():
 			next_states[key] = val
 
-
-		# Sensing environment - Done by ROS
+		# print "next_states"
+		# for key, val in next_states.items():
+		# 	print key, val 
 
 		environment_states = {}
 		for states in environment:
 			environment_states[states] = next_states[states]
 
 
-		# Testing perturbations to system ---------------------------------
-
 		# testing if we don't get a match
-		# if (current_node_states['obstacle2'] == 0 and current_node_states['obstacle3'] == 0) and all(nodes_dict[node]['obstacle2']== 0 and nodes_dict[node]['obstacle3'] == 0  for node in transition_options):
-		
+		if (current_node_states['obstacle2'] == 0 and current_node_states['obstacle3'] == 0) and all(nodes_dict[node]['obstacle2']== 0 and nodes_dict[node]['obstacle3'] == 0  for node in transition_options):
+			r = 1 #random.choice([0, 1])
+			if all(nodes_dict[key]['r_state'] == 2 for key in transition_options):
+			 	environment_states['obstacle3'] = r
+			 	next_states['obstacle3'] = r
 
-		if (current_node_states['obstacle2'] == 0) and all(nodes_dict[node]['obstacle2']== 0 for node in transition_options):
-			r = random.choice([0, 1])
-			# if all(nodes_dict[key]['r_state'] == 2 for key in transition_options):
-			#  	environment_states['obstacle3'] = r
-			#  	next_states['obstacle3'] = r
+				print "TEST"
+				test = True 
 			if all(nodes_dict[key]['r_state'] == 3 for key in transition_options):
 			 	environment_states['obstacle2'] = r
 			 	next_states['obstacle2'] = r
+				print "TEST"
+				test = True 
 
-		# -----------------------------------------------------------------
+			
 
-		# These are the next actual states
-
-		print "next_states"
-		for key, val in next_states.items():
-			print key, val 
-		print "\n"
-
-
-		# Find the node number which matches robot's current states
+		# print "next_states"
+		# for key, val in next_states.items():
+			# print key, val 
+		# print "\n"
 
 		success = False 
 		while success == False: 
 
 			for node_options in transition_options:
-				print "node", node_options 
 				print "r_state", nodes_dict[node_options]['r_state']
-					
-				for key in environment:
-					print key, nodes_dict[node_options][key]
-				for key in commands:
+				for key in environment: 
 					print key, nodes_dict[node_options][key]
 				if all(nodes_dict[node_options][key] == environment_states[key] for key in environment):
 					node_num = node_options
@@ -174,11 +147,26 @@ def test_commands(nodes_dict, transitions_dict):
 				for key, node in nodes_dict.items():
 					if nodes_dict[key] == next_states:
 						print "NO MATCH"
-						exit()		
+												
 						print "selected key", key 
 
-						node_num = key 
+						# for key_check, val in nodes_dict[key].items():
+						# 	print key_check, val 
 
+						node_num = key 
+						# transition_options = [str(i) for i in transitions_dict[key]]
+						# print "transition_options", transition_options
+				
+
+						# node_num = (random.choice(transition_options))
+
+						# next_states = {}
+						# for key, val in nodes_dict[node_num].items():
+						# 	next_states[key] = val
+
+						# environment_states = {}
+						# for states in environment:
+						# 	environment_states[states] = next_states[states]
 
 						success = True 
 
@@ -187,12 +175,29 @@ def test_commands(nodes_dict, transitions_dict):
 					if match == True:
 						break 
 
+		if test == True: 
+			exit()
+
+		robot_commands = {}
+		for c in commands:
+			robot_commands[c] = nodes_dict[node_num][c]
+
+
+		# print "robot_commands", robot_commands
+		
+
+		
+
+
+		
+		# # update node_num to where robot is expected to go
+		# node_num = random.choice(transition_options)	
 
 	exit()
 
 def main():
 
-	node_file = os.path.join(path_location, 'node_dictionary.json')
+	node_file = os.path.join(path_location, 'node_dictionary.json') #1682_
 	transition_file = os.path.join(path_location, 'transition_dictionary.json')
 
 	with open(node_file, 'r') as f:
@@ -210,5 +215,4 @@ def main():
 if __name__ == '__main__':
 	main()
 	
-
 
