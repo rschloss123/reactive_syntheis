@@ -23,7 +23,7 @@ def check_dictionary_comparisons(nodes_dict, transitions_dict):
 	# check = {'workload':14, 'obstacle2': 0, 'obstacle3': 0, 'workload_stays_constant': 0, 'complete_work_with_robot': 0, 'arriving_at_0': 0, 'r_state': 2, 'workload_add': 0, 'complete_work_at_workstation': 1, 'complete_dropoff_tries': 0, 'next_state_is_workstation': 0, 'complete_dropoff_success': 0, 'wait': 0}
 
 	# node_num 10322
-	check = {'workload':21, 'obstacle2': 0, 'obstacle3': 0, 'workload_stays_constant': 1, 'complete_work_with_robot': 1, 'arriving_at_0': 1, 'r_state': 2, 'workload_add': 0, 'complete_work_at_workstation': 1, 'complete_dropoff_tries': 0, 'next_state_is_workstation': 0, 'complete_dropoff_success': 0, 'wait': 0}
+	check = {'workload':11, 'obstacle2': 0, 'workload_stays_constant': 0, 'complete_work_with_robot': 0, 'arriving_at_0': 0, 'r_state': 3, 'workload_add': 0, 'complete_work_at_workstation': 1, 'complete_dropoff_tries': 0, 'next_state_is_workstation': 0, 'complete_dropoff_success': 0, 'wait': 0}
 	
 
 	# print "random key", key_random
@@ -71,7 +71,7 @@ def test_commands(nodes_dict, transitions_dict):
 	test_steps = 1
 
 	key_options = nodes_dict.keys()
-	node_num = '5798' #str(random.choice(key_options)) #'15230'  
+	node_num = '1164' #str(random.choice(key_options)) #'15230'  
 
 
 	commands = ['r_state', 'complete_work_with_robot']
@@ -81,6 +81,16 @@ def test_commands(nodes_dict, transitions_dict):
 	environment = ['wait', 'obstacle2', 'workload', 'complete_work_at_workstation', 'complete_dropoff_success', 'complete_dropoff_tries', 'workload_stays_constant', 'workload_add', 'next_state_is_workstation', 'arriving_at_0']
 
 
+
+
+	for key, node in nodes_dict.items():  
+		for key1, node1 in node.items():
+			print key 
+			print nodes_dict[key]['r_state']
+			print key1
+			print nodes_dict[key][key1]
+			# print environment
+			exit()
 
 	for i in range(0, test_steps):
 
