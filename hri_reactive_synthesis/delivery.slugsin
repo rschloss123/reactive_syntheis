@@ -75,7 +75,7 @@ next_is_3
 | ! & & complete_work_with_robot $ 1 & ! r_state@2 & ! r_state@1 & ! r_state@0.0.4 1 ! complete_dropoff_success | complete_dropoff_success' ! complete_dropoff_success'
 | ! & $ 1 & ! complete_dropoff_tries@1 & ! ^ complete_dropoff_tries@0.0.2 1 1 ! complete_dropoff_success complete_dropoff_success'
 
-| ! next_arriving_at_0 & $ 1 & ! complete_dropoff_tries@1' & ! complete_dropoff_tries@0.0.2' 1 ! complete_dropoff_success'
+| ! next_arriving_at_0 & $ 1 & ! complete_dropoff_tries@1' & ! ^ complete_dropoff_tries@0.0.2' 1 1 | complete_dropoff_success' ! complete_dropoff_success'
 | ! & & $ 1 & ! r_state@2 & ! r_state@1 & ! r_state@0.0.4 1 $ 1 | & ! complete_dropoff_tries@1 1 & | 1 ! complete_dropoff_tries@1 | & ! complete_dropoff_tries@0.0.2 0 & | 0 ! complete_dropoff_tries@0.0.2 0 ! complete_dropoff_success $ 5 ^ 1 complete_dropoff_tries@0.0.2 & 1 complete_dropoff_tries@0.0.2 ^ complete_dropoff_tries@1 ? 1 & complete_dropoff_tries@1 ? 1 & ! ? 3 & ! ^ complete_dropoff_tries@1' ? 2 & ! ^ complete_dropoff_tries@0.0.2' ? 0 1
 
 | ! complete_dropoff_success & $ 1 & ! complete_dropoff_tries@1' & ! complete_dropoff_tries@0.0.2' 1 ! complete_dropoff_success'
@@ -89,7 +89,7 @@ next_is_3
 [ENV_INIT]
 ! wait
 ! complete_work_at_workstation
-$ 1 & ! ^ workload@4 1 & ! ^ workload@3 1 & ! ^ workload@2 0 & ! ^ workload@1 0 & ! ^ workload@0.0.30 1 1
+$ 1 & ! workload@4 & ! ^ workload@3 1 & ! ^ workload@2 1 & ! ^ workload@1 0 & ! ^ workload@0.0.30 0 1
 #workload >= 9 && workload <= 26
 ! workload_stays_constant
 
@@ -108,6 +108,7 @@ $ 1 & ! ^ workload@4 1 & ! ^ workload@3 1 & ! ^ workload@2 0 & ! ^ workload@1 0 
 # There will always be a transfer when the robot arrives at workstation
 # Also have tried workload_add = 8
 | ! & $ 1 & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 1 1 next_state_is_workstation $ 1 & ! ^ workload_add@3 1 & ! ^ workload_add@2 1 & ! ^ workload_add@1 1 & ! ^ workload_add@0.0.15 1 1
+| ! & $ 1 & ! ^ r_state@2 1 & ! ^ r_state@1 0 & ! ^ r_state@0.0.4 0 1 next_state_is_workstation $ 1 & ! workload_add@3 & ! workload_add@2 & ! workload_add@1 & ! workload_add@0.0.15 1
 # The robot may or may not continue to give the human work
 | & next_state_is_workstation | $ 1 & ! workload_add@3 & ! workload_add@2 & ! workload_add@1 & ! workload_add@0.0.15 1 $ 1 & ! ^ workload_add@3 1 & ! ^ workload_add@2 1 & ! ^ workload_add@1 1 & ! ^ workload_add@0.0.15 1 1 & ! next_state_is_workstation $ 1 & ! workload_add@3 & ! workload_add@2 & ! workload_add@1 & ! workload_add@0.0.15 1
 
@@ -156,7 +157,7 @@ $ 1 & ! ^ workload@4 1 & ! ^ workload@3 1 & ! ^ workload@2 0 & ! ^ workload@1 0 
 | ! & & $ 1 & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 1 1 obstacle_2 | complete_work_with_robot ! complete_work_with_robot | $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 1 1 $ 1 & ! ^ r_state@2' 1 & ! ^ r_state@1' 0 & ! ^ r_state@0.0.4' 0 1
 | ! & & $ 1 & ! r_state@2 & ! ^ r_state@1 1 & ! ^ r_state@0.0.4 1 1 ! obstacle_2 | complete_work_with_robot ! complete_work_with_robot | | $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 0 1 $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 1 1 $ 1 & ! ^ r_state@2' 1 & ! ^ r_state@1' 0 & ! ^ r_state@0.0.4' 0 1
 | ! & & $ 1 & ! ^ r_state@2 1 & ! ^ r_state@1 0 & ! ^ r_state@0.0.4 0 1 obstacle_3 | complete_work_with_robot ! complete_work_with_robot $ 1 & ! ^ r_state@2' 1 & ! ^ r_state@1' 0 & ! ^ r_state@0.0.4' 0 1
-| ! & & $ 1 & ! ^ r_state@2 1 & ! ^ r_state@1 0 & ! ^ r_state@0.0.4 0 1 ! obstacle_3 | complete_work_with_robot ! complete_work_with_robot | $ 1 & ! ^ r_state@2' 1 & ! ^ r_state@1' 0 & ! ^ r_state@0.0.4' 0 1 $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 1 1
+| ! & & $ 1 & ! ^ r_state@2 1 & ! ^ r_state@1 0 & ! ^ r_state@0.0.4 0 1 ! obstacle_3 | complete_work_with_robot ! complete_work_with_robot $ 1 & ! r_state@2' & ! ^ r_state@1' 1 & ! ^ r_state@0.0.4' 1 1
 
 #(r_state = 0) -> (r_state' = 0) || (r_state' = 1)
 #(r_state = 1) -> (r_state' = 1) || (r_state' = 2)
