@@ -45,20 +45,22 @@ def check_dictionary_comparisons(nodes_dict, transitions_dict):
 
 def test_transitions(nodes_dict, transitions_dict):
 
-	test_steps = 10
+	test_steps = 10000
 
 	key_options = nodes_dict.keys()
 	
 
-	key = str(random.choice(key_options))
+	key = '0'# str(random.choice(key_options))
 
 	for i in range(0, test_steps):
 		print "key", key
 		r_state = nodes_dict[key]['r_state']
 		print "r_state:", r_state
+		print "human_present", nodes_dict[key]['human_present']
+		print "human_count", nodes_dict[key]['human_count']
 
 		transition_options = transitions_dict[key]
-		print "transition options:", transition_options
+		# print "transition options:", transition_options
 		key = str((random.choice(transition_options)))
 
 	return 
@@ -207,9 +209,9 @@ def main():
 	    transitions_dict = json.load(f)
 
 	# check_dictionary_comparisons(nodes_dict, transitions_dict)
-	# test_transitions(nodes_dict, transitions_dict)
+	test_transitions(nodes_dict, transitions_dict)
 	# test_deviations(nodes_dict, transitions_dict)
-	test_commands(nodes_dict, transitions_dict)
+	# test_commands(nodes_dict, transitions_dict)
 
 
 if __name__ == '__main__':
