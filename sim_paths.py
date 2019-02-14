@@ -154,6 +154,8 @@ def get_lookup():
 		{'name': 'complete_dropoff_success', 'bits': 1},
 		{'name': 'complete_dropoff_tries', 'bits': 2},
 		{'name': 'workload_stays_constant', 'bits': 1},
+		{'name': 'human_present', 'bits': 1},
+		{'name': 'flexibility', 'bits': 1},
 		{'name': 'r_state', 'bits': 3},
 		{'name': 'workload_add', 'bits': 4},
 		{'name': 'next_state_is_workstation', 'bits': 1},

@@ -36,24 +36,26 @@ def mapping(states_one_step):
 			patch_O3.center = (2.5, 0.9)
 
 		# robot
-		if states_one_step[11] == 1:
+		if states_one_step[13] == 1:
 			patch_r.set_fc('c')
 		else: 
 			patch_r.set_fc('y')
-		if states_one_step[8] == 0:
+		if states_one_step[10] == 0:
 			patch_r.center = (0.5, 0.8)
-		elif states_one_step[8] == 1: 
+		elif states_one_step[10] == 1: 
 			patch_r.center = (0.5, 0.5)
-		elif states_one_step[8] == 2: 
+		elif states_one_step[10] == 2: 
 			patch_r.center = (1.5, 0.5)
-		elif states_one_step[8] == 3: 
+		elif states_one_step[10] == 3: 
 			patch_r.center = (2.5, 0.5)
 		else:    
 			patch_r.center = (3.48, 0.5)
 
 
 		# human
-		if states_one_step[4] == 1:
+		if states_one_step[8] == 0:
+			patch_h.set_fc('k')
+		elif states_one_step[4] == 1:
 			patch_h.set_fc('b')
 		else: 
 			patch_h.set_fc('y')
