@@ -59,7 +59,7 @@ def variables_to_base10(node, name_and_bits):
 
 		val_base_10 = int(bin_string,2)
 
-		if name != 'next_state_is_workstation' and name != 'next_arriving_at_0' and name != 'next_is_2' and name != 'next_is_3':
+		if name != 'next_state_is_workstation' and name != 'next_is_2' and name != 'next_is_3':
 
 
 			print name+":", val_base_10
