@@ -24,8 +24,8 @@ next_is_3
 [ENV_INIT]
 !wait
 !complete_work_at_workstation 
-workload = 12
-#workload >= 9 && workload <= 26
+#workload = 12
+workload >= 9 && workload <= 26
 !workload_stays_constant
 
 [SYS_INIT]

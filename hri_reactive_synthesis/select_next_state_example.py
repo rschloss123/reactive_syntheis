@@ -10,20 +10,18 @@ import sim_paths
 def check_dictionary_comparisons(nodes_dict, transitions_dict):
 
 
-	num_nodes = len(nodes_dict)
+	#num_nodes = len(nodes_dict)
 	
-	key_options = nodes_dict.keys()
+	#key_options = nodes_dict.keys()
 	
 
-	key_random = str(random.choice(key_options))
+	#key_random = str(random.choice(key_options))
 
 
-	check = nodes_dict[key_random]
+	#check = nodes_dict[key_random]
 
-	# check = {'workload':14, 'obstacle2': 0, 'obstacle3': 0, 'workload_stays_constant': 0, 'complete_work_with_robot': 0, 'arriving_at_0': 0, 'r_state': 2, 'workload_add': 0, 'complete_work_at_workstation': 1, 'complete_dropoff_tries': 0, 'next_state_is_workstation': 0, 'complete_dropoff_success': 0, 'wait': 0}
 
-	# node_num 10322
-	check = {'workload':21, 'obstacle2': 0, 'obstacle3': 0, 'workload_stays_constant': 1, 'complete_work_with_robot': 1, 'arriving_at_0': 1, 'r_state': 2, 'workload_add': 0, 'complete_work_at_workstation': 1, 'complete_dropoff_tries': 0, 'next_state_is_workstation': 0, 'complete_dropoff_success': 0, 'wait': 0}
+	check = {'workload':9, 'obstacle2': 0, 'obstacle3': 0, 'workload_stays_constant': 0, 'complete_work_with_robot': 0, 'next_arriving_at_0': 0, 'r_state': 1, 'workload_add': 0, 'complete_work_at_workstation': 0, 'complete_dropoff_tries': 0, 'next_state_is_workstation': 0, 'complete_dropoff_success': 0, 'wait': 0, 'next_is_2':1, 'next_is_3':0}
 	
 
 	# print "random key", key_random
@@ -71,7 +69,7 @@ def test_commands(nodes_dict, transitions_dict):
 	test_steps = 500
 
 	key_options = nodes_dict.keys()
-	node_num = str(random.choice(key_options)) #'1682'  
+	node_num = '419' #str(random.choice(key_options)) #'1682'  
 
 
 	print "node_num", node_num
